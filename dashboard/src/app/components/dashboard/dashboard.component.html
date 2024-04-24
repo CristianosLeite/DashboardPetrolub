@@ -1,0 +1,16 @@
+<!-- dashboard.component.html -->
+<div class="selector">
+  <app-period-selector (periodChanged)="periodChanged($event)"/>
+</div>
+
+<div class="container isMobile">
+  <div *ngFor="let widget of widgets">
+    <ng-container *ngComponentOutlet="widgetComponents[widget]"/>
+  </div>
+</div>
+
+<div class="container isDesktop" cdkDropList (cdkDropListDropped)="drop($event)">
+  <div *ngFor="let widget of widgets" cdkDrag>
+    <ng-container *ngComponentOutlet="widgetComponents[widget]"/>
+  </div>
+</div>

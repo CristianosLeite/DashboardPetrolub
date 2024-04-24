@@ -1,0 +1,109 @@
+.card {
+  border: none;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+}
+
+.icons {
+  font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 0;
+  max-height: 50px;
+}
+
+.side-header {
+  font-size: 18px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 10%;
+  padding: 5px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+}
+
+.logo {
+  max-height: 50px;
+  margin-left: 5px;
+}
+
+.side-footer {
+  display: flex;
+  position: absolute;
+  bottom: 60;
+  padding-right: 20px;
+}
+
+.sidebar {
+  display: block;
+  min-width: 50px;
+  min-height: 100vh;
+  transition: min-width 0.3s;
+  background-color: #EFEFEF;
+}
+
+.sidebar.expanded {
+  width: 180px;
+  background-color: #EFEFEF;
+  transition: min-width 0.5s ease-in-out;
+  animation: fadeIn 0.5s;
+}
+
+.icon {
+  font-size: 20px;
+  padding: 10px;
+  display: flex;
+  margin-left: 15px
+}
+
+.slot {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 50px;
+  min-width: 50px;
+}
+
+.slot:hover {
+  background-color: #fff;
+  cursor: pointer;
+}
+
+i:hover {
+  color: #04A24D;
+  cursor: pointer;
+}
+
+a {
+  font-size: 18px;
+  text-decoration: none;
+  color: #333;
+}
+
+a:hover {
+  color: #04A24D;
+  cursor: pointer;
+}
+
+p {
+  margin: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.5;
+    transition: 1s;
+  }
+  to {
+    opacity: 1;
+    transition: 1s;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .sidebar {
+    visibility: hidden;
+  }
+}

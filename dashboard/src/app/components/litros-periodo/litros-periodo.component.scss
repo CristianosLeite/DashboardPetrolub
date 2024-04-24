@@ -1,0 +1,19 @@
+.card {
+  display: block;
+  background-color: #efefef;
+  align-items: center;
+  border: none;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  min-width: 680px;
+  min-height: 362px;
+  padding: 0;
+  margin: 20px;
+}
+
+@media (max-width: 600px) {
+  .card {
+    transform: scale(1);
+    min-width: auto;
+    min-height: auto;
+  }
+}

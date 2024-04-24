@@ -1,0 +1,21 @@
+.card {
+  display: block;
+  background-color: #efefef;
+  min-height: 100px;
+  align-items: center;
+  border: none;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  min-width: 720px;
+  min-height: 362px;
+  padding: 0;
+  margin: 20px;
+}
+
+@media (max-width: 600px) {
+  .card {
+    transform: scale(1);
+    min-width: auto;
+    min-height: auto;
+    justify-content: center;
+  }
+}

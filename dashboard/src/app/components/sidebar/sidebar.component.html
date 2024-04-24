@@ -1,0 +1,21 @@
+<div class="sidebar card" [class.expanded]="isExpanded">
+  <div class="side-header">
+    <img class="logo" src="../../assets/logo.png" alt="logo" width="50" *ngIf="isExpanded">
+    <i class="bi bi-arrow-bar-right icon" (click)="toggleSidebar()" *ngIf="!isExpanded"></i>
+    <i class="bi bi-arrow-bar-left icon" (click)="toggleSidebar()" *ngIf="isExpanded"></i>
+  </div>
+  <div class="icons">
+    <a class="slot" routerLink="/home" routerLinkActive="active" ariaCurrentWhenActive="page">
+      <i class="bi bi-graph-up icon"></i>
+      <p *ngIf="isExpanded">Dashboard</p>
+    </a>
+    <a class="slot" routerLink="/pendings">
+      <i class="bi bi-ticket-detailed icon"></i>
+      <p *ngIf="isExpanded">Tickets</p>
+    </a>
+    <a class="slot" routerLink="/reports">
+      <i class="bi bi-receipt-cutoff icon"></i>
+      <p *ngIf="isExpanded">Relatórios</p>
+    </a>
+  </div>
+</div>
