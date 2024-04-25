@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: row;
   width: auto;
-  height: auto;
+  height: 90vh;
 }
 
 .side {
@@ -19,7 +19,6 @@
   margin-left: 50px;
   padding: 0;
   padding-left: 30px;
-  height: 110vh;
 }
 
 .row-cols-1 {
@@ -53,21 +52,16 @@
   }
 }
 
-@media screen and (min-width: 600px) {
-  .header {
-    min-width: 50%;
-  }
-}
-
 @media (max-width: 600px) {
   .body {
     flex-direction: column-reverse;
     transform: scale(1);
-    min-width: auto;
-    min-height: auto;
+    margin: 0;
   }
   .container-fluid {
-    margin-left: 0;
-    padding-left: 0;
+    display: block;
+    margin: 0;
+    padding: 0;
+    height: auto;
   }
 }

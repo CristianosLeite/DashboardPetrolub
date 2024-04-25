@@ -1,8 +1,8 @@
 <div class="sidebar card" [class.expanded]="isExpanded">
+  <i class="bi bi-arrow-bar-right icon" (click)="toggleSidebar()" *ngIf="!isExpanded"></i>
+  <i class="bi bi-arrow-bar-left icon" (click)="toggleSidebar()" *ngIf="isExpanded"></i>
   <div class="side-header">
-    <img class="logo" src="../../assets/logo.png" alt="logo" width="50" *ngIf="isExpanded">
-    <i class="bi bi-arrow-bar-right icon" (click)="toggleSidebar()" *ngIf="!isExpanded"></i>
-    <i class="bi bi-arrow-bar-left icon" (click)="toggleSidebar()" *ngIf="isExpanded"></i>
+    <img src="../../assets/petrolub.png" alt="logo" class="logo" *ngIf="isExpanded"/>
   </div>
   <div class="icons">
     <a class="slot" routerLink="/home" routerLinkActive="active" ariaCurrentWhenActive="page">

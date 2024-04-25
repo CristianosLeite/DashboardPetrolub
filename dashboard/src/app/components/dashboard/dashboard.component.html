@@ -10,7 +10,7 @@
 </div>
 
 <div class="container isDesktop" cdkDropList (cdkDropListDropped)="drop($event)">
-  <div *ngFor="let widget of widgets" cdkDrag>
+  <div *ngFor="let widget of widgets" cdkDrag cdkDragBoundary=".container">
     <ng-container *ngComponentOutlet="widgetComponents[widget]"/>
   </div>
 </div>

@@ -17,7 +17,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class SidebarComponent {
   @Input()
-  isExpanded: boolean = true;
+  isExpanded: boolean = false;
 
   constructor() { }
 
