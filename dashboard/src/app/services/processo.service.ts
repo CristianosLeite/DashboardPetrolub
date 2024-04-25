@@ -29,11 +29,11 @@ export class ProcessoService {
     return this.apiService.getProcessos();
   }
 
-  public async getProcesso(id: string): Promise<Processo> {
-    return await this.apiService.getProcesso(id);
+  public getProcesso(id: string): Promise<Processo> {
+    return this.apiService.getProcesso(id);
   }
 
-  public async getLastProcesso(): Promise<Processo> {
-    return await this.apiService.getLastProcesso();
+  public getLastProcesso(): Promise<Processo> {
+    return this.apiService.getLastProcesso();
   }
 }

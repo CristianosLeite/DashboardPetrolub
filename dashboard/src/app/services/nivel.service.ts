@@ -15,8 +15,16 @@ export class NivelService {
   NiveisChanged = new EventEmitter<Nivel[]>();
 
   constructor(private apiService: ApiService) {
+    this.getNiveis().then((niveis: Nivel[]) => {
+      this.niveis = niveis;
+      this.NiveisChanged.emit(this.niveis);
+    });
+    this.getLastNivel().then((lastNivel: Nivel) => {
+      this.lastNivel = lastNivel;
+      this.LastNivelChanged.emit(this.lastNivel);
+    });
     this.subscription = interval(10000).subscribe(async () => {
-      Promise.all([await this.getLastNivel(), await this.getNiveis()]).then(([lastNivel, niveis]) => {
+      Promise.all([this.getLastNivel(), this.getNiveis()]).then(([lastNivel, niveis]) => {
         this.lastNivel = lastNivel;
         this.niveis = niveis;
       });
@@ -25,15 +33,15 @@ export class NivelService {
     });
   }
 
-  public async getNiveis(): Promise<Nivel[]> {
+  public getNiveis(): Promise<Nivel[]> {
     return this.apiService.getNiveis();
   }
 
-  public async getNivel(id: string): Promise<Nivel> {
+  public getNivel(id: string): Promise<Nivel> {
     return this.apiService.getNivel(id);
   }
 
-  public async getLastNivel(): Promise<Nivel> {
+  public getLastNivel(): Promise<Nivel> {
     return this.apiService.getLastNivel();
   }
 }
