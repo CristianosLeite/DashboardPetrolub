@@ -80,7 +80,9 @@ export class LitrosPeriodoComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription = interval(1000).subscribe(() => {
+    this.processoService.ProcessoChanged.subscribe((processos) => {
+      this.processos = processos;
+      console.log(this.processos)
       this.ngZone.run(() => {
         this.setData();
       });
@@ -88,30 +90,27 @@ export class LitrosPeriodoComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  async setData() {
-    await this.processoService.getProcessos().then((processos) => {
-      this.processos = processos;
-      const dateToIndex = new Map<string, number>();
-      this.dataset.labels.forEach((date, index) => {
-        dateToIndex.set(date, index);
-      });
-      this.litrosDescarregamento = new Array(this.dataset.labels.length).fill(0);
-      this.litrosCarregamento = new Array(this.dataset.labels.length).fill(0);
-      processos.forEach((processo) => {
-        const date = new Date(processo.data_hora_inicio).toLocaleDateString();
-        if (dateToIndex.has(date)) {
-          const index: number = dateToIndex.get(date)?.valueOf() as number;
-          if (processo.tipo_operacao === 'DESCARREGAMENTO') {
-            this.litrosDescarregamento[index] += processo.total_litros_processo;
-          } else if (processo.tipo_operacao === 'CARREGAMENTO') {
-            this.litrosCarregamento[index] += processo.total_litros_processo;
-          }
-        }
-      });
-      this.dataset.datasets[0].data = this.litrosDescarregamento;
-      this.dataset.datasets[1].data = this.litrosCarregamento;
-      this.chart?.update();
+  setData() {
+    const dateToIndex = new Map<string, number>();
+    this.dataset.labels.forEach((date, index) => {
+      dateToIndex.set(date, index);
     });
+    this.litrosDescarregamento = new Array(this.dataset.labels.length).fill(0);
+    this.litrosCarregamento = new Array(this.dataset.labels.length).fill(0);
+    this.processos.forEach((processo) => {
+      const date = new Date(processo.data_hora_inicio).toLocaleDateString();
+      if (dateToIndex.has(date)) {
+        const index: number = dateToIndex.get(date)?.valueOf() as number;
+        if (processo.tipo_operacao === 'DESCARREGAMENTO') {
+          this.litrosDescarregamento[index] += processo.total_litros_processo;
+        } else if (processo.tipo_operacao === 'CARREGAMENTO') {
+          this.litrosCarregamento[index] += processo.total_litros_processo;
+        }
+      }
+    });
+    this.dataset.datasets[0].data = this.litrosDescarregamento;
+    this.dataset.datasets[1].data = this.litrosCarregamento;
+    this.chart?.update();
   }
 
   setDatasetLabels(): void {
