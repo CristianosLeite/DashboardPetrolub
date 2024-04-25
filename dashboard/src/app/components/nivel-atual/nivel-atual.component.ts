@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, OnChanges, NgZone, ViewChild } from '@angular/core';
 import { NivelService } from '../../services/nivel.service';
 import { Subscription, interval } from 'rxjs';
-import { Nivel } from '../../interfaces/nivel.interface';
 import { Dataset } from '../../interfaces/dataset.interface';
 import { BarChartOptionsInterface } from '../../interfaces/barChartOptions.interface';
 import { BaseChartDirective } from 'ng2-charts';
@@ -18,7 +17,6 @@ export class NivelAtualComponent implements OnInit, OnChanges, OnDestroy {
   private subscription: Subscription = new Subscription();
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
-  lastNivel = {} as Nivel;
   dataset: Dataset = {
     labels: ['Tanque Medição 1', 'Tanque Medição 2', 'Tanque Armazenamento 1', 'Tanque Armazenamento 2', 'Tanque Armazenamento 3', 'Tanque Armazenamento 4'],
     datasets: [
@@ -61,8 +59,7 @@ export class NivelAtualComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit(): void {
     this.subscription = interval(1000).subscribe(() => {
       this.ngZone.run(async () => {
-        await this.nivelService.getLastNivel().then((nivel) => {
-          this.lastNivel = nivel;
+        this.nivelService.LastNivelChanged.subscribe(nivel => {
           this.dataset.datasets[0].data = [nivel[0].nivel_tq_med_1, nivel[0].nivel_tq_med_2, nivel[0].nivel_tq_arm_1, nivel[0].nivel_tq_arm_2, nivel[0].nivel_tq_arm_3, nivel[0].nivel_tq_arm_4];
         });
       });
