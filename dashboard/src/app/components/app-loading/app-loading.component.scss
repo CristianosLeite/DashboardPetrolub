@@ -1,0 +1,22 @@
+body {
+  position: fixed;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.2) !important;
+  backdrop-filter: blur(2px) !important;
+  min-width: 100%;
+  min-height: 100vh;
+  z-index: 9999;
+}
+
+.spinner-border {
+  display: flex;
+  position: relative;
+  margin-top: 40vh;
+  width: 6rem;
+  height: 6rem;
+  border-width: 0.7rem;
+  border-color: #fff;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spinner-border 1s linear infinite;
+}

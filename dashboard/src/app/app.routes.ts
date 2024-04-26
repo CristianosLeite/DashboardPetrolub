@@ -1,7 +1,9 @@
 import { Routes } from '@angular/router';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { LoginComponent } from './pages/login/login.component';
+import { PainelComponent } from './pages/painel/painel.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'painel/petrolub/ba', pathMatch: 'full'},
-  { path: 'painel/petrolub/ba', component: DashboardComponent }
+  { path: '', redirectTo: 'painel/petrolub/ba/login', pathMatch: 'full'},
+  { path: 'painel/petrolub/ba/login', component: LoginComponent },
+  { path: 'painel/petrolub/ba/dashboard', component: PainelComponent }
 ];

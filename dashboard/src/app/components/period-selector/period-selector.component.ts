@@ -33,6 +33,9 @@ export class PeriodSelectorComponent {
 
   set bsRangeValue(value: Date[]) {
     this._bsRangeValue = value;
-    this.periodChanged.emit([this.bsRangeValue[0], new Date(this.bsRangeValue[1].getFullYear(), this.bsRangeValue[1].getMonth(), this.bsRangeValue[1].getDate() + 1)]);
+    this.periodChanged.emit([
+      new Date(this.bsRangeValue[0].getFullYear(), this.bsRangeValue[0].getMonth(), this.bsRangeValue[0].getDate()),
+      new Date(this.bsRangeValue[1].getFullYear(), this.bsRangeValue[1].getMonth(), this.bsRangeValue[1].getDate() + 1)
+    ]);
   }
 }

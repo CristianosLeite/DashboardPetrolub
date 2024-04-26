@@ -7,6 +7,7 @@ import { BarChartOptionsInterface } from '../../interfaces/barChartOptions.inter
 import { BaseChartDirective } from 'ng2-charts';
 import { GraphComponent } from '../graph/graph.component';
 import { DateService } from '../../services/date.service';
+import { LoadingService } from '../../services/loading.service';
 
 @Component({
   selector: 'app-qnt-litros',
@@ -18,9 +19,9 @@ import { DateService } from '../../services/date.service';
 export class QntLitrosComponent implements OnInit, OnChanges, OnDestroy {
   private subscription: Subscription = new Subscription();
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
-  dateRange: Date[] = [new Date(new Date(new Date().setDate(new Date().getDate() - 7))), new Date()];
+  dateRange: Date[] = [new Date(new Date(new Date().setDate(new Date().getDate() - 8))), new Date()];
 
-  constructor(private processoService: ProcessoService, private ngZone: NgZone, private dateService: DateService) {
+  constructor(private processoService: ProcessoService, private ngZone: NgZone, private dateService: DateService, private loadingService: LoadingService) {
     this.dateService.DateChanged.subscribe((dateRange: Date[]) => {
       this.dateRange = dateRange;
     });
@@ -79,7 +80,11 @@ export class QntLitrosComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(): void {
-    this.chart?.update();
+    this.loadingService.setLoading(true);
+    setTimeout(() => {
+      this.chart?.update();
+      this.loadingService.setLoading(false);
+    }, 2000);
   }
 
   ngOnDestroy(): void {
@@ -87,7 +92,7 @@ export class QntLitrosComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   async setData(startDate: Date, endDate: Date) {
-    await this.processoService.getProcessos().then((processos) => {
+    this.processoService.ProcessoChanged.subscribe((processos) => {
       this.processos = processos;
       this.litrosDescarregamento = 0;
       this.litrosCarregamento = 0;

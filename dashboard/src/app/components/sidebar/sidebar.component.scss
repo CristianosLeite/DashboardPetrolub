@@ -29,10 +29,10 @@
 }
 
 .side-footer {
-  display: flex;
-  position: absolute;
-  bottom: 60;
-  padding-right: 20px;
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 58px;
+  width: 70px;
 }
 
 .sidebar {
@@ -57,7 +57,13 @@
   .bi-arrow-bar-right, .bi-arrow-bar-left {
     color: #fff;
     justify-content: flex-end;
-  }
+  };
+  .side-footer {
+    position: fixed;
+    bottom: 0;
+    margin-bottom: 58px;
+    width: 180px;
+  };
 }
 
 .icon {

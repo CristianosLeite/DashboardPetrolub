@@ -1,10 +1,19 @@
-import { Injectable, isDevMode  } from '@angular/core';
+import { Injectable, isDevMode, EventEmitter, Output } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { LoadingService } from './loading.service';
 import { Processo } from '../interfaces/processo.interface';
 import { Evento } from '../interfaces/eventos.interface';
 import { Nivel } from '../interfaces/nivel.interface';
+import { User } from '../interfaces/user.interface';
+
+export interface ApiResponse {
+  message: string;
+  data: {
+    name: string;
+  };
+  token?: string | undefined;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -20,74 +29,129 @@ export class ApiService {
    * @param isDevMode Verifica se a aplicação está em modo de desenvolvimento.
    * @returns Retorna a URL base da API.
   */
-    baseUrl = isDevMode() ? 'http://localhost:3000/api' : 'https://petrolub-be0cf9d63635.herokuapp.com/api';
+  baseUrl = isDevMode() ? 'http://localhost:3000/api' : 'https://petrolub-be0cf9d63635.herokuapp.com/api';
 
-    processo = {} as Processo;
+  processo = {} as Processo;
+
+  @Output() UserAuthenticated = new EventEmitter<User>();
 
   constructor(private http: HttpClient, private loadingService: LoadingService) { }
 
   /**
-   * @description Retorna o cabeçalho da requisição.
-   * @returns Retorna um objeto HttpHeaders.
-   * @throws Retorna um erro caso não seja possível buscar o cabeçalho.
-   * @param token Token de autenticação.
+ * @description Retorna o cabeçalho da requisição.
+ * @returns Retorna um objeto HttpHeaders.
+ * @throws Retorna um erro caso não seja possível buscar o cabeçalho.
+ * @param token Token de autenticação.
+*/
+  private async headers(): Promise<HttpHeaders> {
+    const token = await this.validateToken().then((response: any) => {
+      return response.token;
+    });
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      Conection: 'keep-alive',
+      Accept: '*/*',
+      'Cache-Control': 'no-cache',
+      'content-type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+    });
+  }
+
+  /**
+  * @description Redireciona o usuário para a página de autenticação.
+  * @param cod_company Código da empresa.
+  * @param cod_user Código do usuário.
+ */
+  private getToken(cod_company: string, cod_user: string): void {
+    this.loadingService.setLoading(true);
+    try {
+      window.location.assign(`${this.baseUrl}/login?username=${cod_company}&usercode=${cod_user}&app=painel/petrolub/ba/login`);
+    }
+    catch (error) {
+      this.loadingService.setLoading(false);
+      throw error;
+    }
+  }
+
+  /**
+   * @description Verifica se token de autenticação é válido.
+   * @returns Retorna um objeto do tipo User.
+   * @throws Retorna um erro caso não seja possível buscar as informações do usuário.
   */
-    private async headers(): Promise<HttpHeaders> {
-      return new HttpHeaders({
-        Conection: 'keep-alive',
-        Accept: '*/*',
-        'Cache-Control': 'no-cache',
-        'content-type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      });
-    }
+  async validateToken(): Promise<ApiResponse> {
+    this.loadingService.setLoading(true);
+    try {
+      const response: any = await lastValueFrom(
+        this.http.post(`${this.baseUrl}/login/validate-token`, null, { withCredentials: true })
+      );
 
-    public async getProcessos(): Promise<Processo[]> {
-      this.loadingService.setLoading(true);
-      const response = await lastValueFrom(this.http.get<Processo[]>(`${this.baseUrl}/processo/all`));
+      this.UserAuthenticated.emit(response);
       this.loadingService.setLoading(false);
       return response;
-    }
-
-    public async getProcesso(id: string): Promise<Processo> {
-      this.loadingService.setLoading(true);
-      const response = await lastValueFrom(this.http.get<Processo>(`${this.baseUrl}/processo/one/${id}`));
+    } catch (error) {
       this.loadingService.setLoading(false);
-      return response;
+      throw error;
     }
+  }
 
-    public async getLastProcesso(): Promise<Processo> {
-      this.loadingService.setLoading(true);
-      const response = await lastValueFrom(this.http.get<Processo>(`${this.baseUrl}/processo/last`));
-      this.loadingService.setLoading(false);
-      return response;
-    }
+   /**
+   * Realiza o login do usuário.
+   * @param username
+   * @param usercode
+   */
+   async login(username: string, usercode: string): Promise<void> {
+    this.getToken(username, usercode);
+  }
 
-    public async getEventos(): Promise<Evento[]> {
-      this.loadingService.setLoading(true);
-      const response = await lastValueFrom(this.http.get<Evento[]>(`${this.baseUrl}/evento/all`));
-      this.loadingService.setLoading(false);
-      return response;
+  /**
+   * Realiza o logout do usuário.
+   */
+  logout(): void {
+    this.loadingService.setLoading(true);
+    try {
+      window.location.assign(`${this.baseUrl}/logout`);
+      sessionStorage.clear();
+      this.UserAuthenticated.emit({} as User);
     }
+    catch (error) {
+      this.loadingService.setLoading(false);
+      throw error;
+    }
+    this.loadingService.setLoading(false);
+  }
 
-    public async getNiveis(): Promise<Nivel[]> {
-      this.loadingService.setLoading(true);
-      const response = await lastValueFrom(this.http.get<Nivel[]>(`${this.baseUrl}/nivel/all`));
-      this.loadingService.setLoading(false);
-      return response;
-    }
+  public async getProcessos(): Promise<Processo[]> {
+    const response = await lastValueFrom(this.http.get<Processo[]>(`${this.baseUrl}/processo/all`));
+    return response;
+  }
 
-    public async getNivel(id: string): Promise<Nivel> {
-      this.loadingService.setLoading(true);
-      const response = await lastValueFrom(this.http.get<Nivel>(`${this.baseUrl}/nivel/one/${id}`));
-      this.loadingService.setLoading(false);
-      return response;
-    }
+  public async getProcesso(id: string): Promise<Processo> {
+    const response = await lastValueFrom(this.http.get<Processo>(`${this.baseUrl}/processo/one/${id}`));
+    return response;
+  }
 
-    public async getLastNivel(): Promise<Nivel> {
-      this.loadingService.setLoading(true);
-      const response = await lastValueFrom(this.http.get<Nivel>(`${this.baseUrl}/nivel/last`));
-      this.loadingService.setLoading(false);
-      return response;
-    }
+  public async getLastProcesso(): Promise<Processo> {
+    const response = await lastValueFrom(this.http.get<Processo>(`${this.baseUrl}/processo/last`));
+    return response;
+  }
+
+  public async getEventos(): Promise<Evento[]> {
+    const response = await lastValueFrom(this.http.get<Evento[]>(`${this.baseUrl}/evento/all`));
+    return response;
+  }
+
+  public async getNiveis(): Promise<Nivel[]> {
+    const response = await lastValueFrom(this.http.get<Nivel[]>(`${this.baseUrl}/nivel/all`));
+    return response;
+  }
+
+  public async getNivel(id: string): Promise<Nivel> {
+    const response = await lastValueFrom(this.http.get<Nivel>(`${this.baseUrl}/nivel/one/${id}`));
+    return response;
+  }
+
+  public async getLastNivel(): Promise<Nivel> {
+    const response = await lastValueFrom(this.http.get<Nivel>(`${this.baseUrl}/nivel/last`));
+    return response;
+  }
 }

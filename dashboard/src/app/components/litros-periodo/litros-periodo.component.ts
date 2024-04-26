@@ -7,6 +7,7 @@ import { BarChartOptionsInterface } from '../../interfaces/barChartOptions.inter
 import { BaseChartDirective } from 'ng2-charts';
 import { GraphComponent } from '../graph/graph.component';
 import { DateService } from '../../services/date.service';
+import { LoadingService } from '../../services/loading.service';
 
 @Component({
   selector: 'app-litros-periodo',
@@ -19,9 +20,9 @@ export class LitrosPeriodoComponent implements OnInit, OnChanges, OnDestroy {
   private subscription: Subscription = new Subscription();
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
-  dateRange: Date[] = [new Date(new Date(new Date().setDate(new Date().getDate() - 7))), new Date()];
+  dateRange: Date[] = [new Date((new Date().setDate(new Date().getDate() - 8))), new Date()];
 
-  constructor(private processoService: ProcessoService, private ngZone: NgZone, private dateService: DateService) {
+  constructor(private processoService: ProcessoService, private ngZone: NgZone, private dateService: DateService, private loadingService: LoadingService) {
     this.dateService.DateChanged.subscribe((dateRange: Date[]) => {
       this.dateRange = dateRange;
     });
@@ -80,6 +81,7 @@ export class LitrosPeriodoComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.loadingService.setLoading(true);
     this.processoService.ProcessoChanged.subscribe((processos) => {
       this.processos = processos;
       this.ngZone.run(() => {
@@ -87,6 +89,9 @@ export class LitrosPeriodoComponent implements OnInit, OnChanges, OnDestroy {
       });
       this.setDatasetLabels();
     });
+    setTimeout(() => {
+      this.loadingService.setLoading(false);
+    }, 2000);
   }
 
   setData() {
