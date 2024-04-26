@@ -36,7 +36,6 @@ export class AppComponent {
     });
     this.apiService.UserAuthenticated.subscribe((response: ApiResponse) => {
       this.param = response.token === undefined ? 'clientError' : '';
-      console.log('UserAuthenticated', response);
     });
   }
 

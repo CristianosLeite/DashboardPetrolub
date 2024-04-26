@@ -65,7 +65,7 @@ export class ApiService {
   private getToken(cod_company: string, cod_user: string): void {
     this.loadingService.setLoading(true);
     try {
-      window.location.assign(`${this.baseUrl}/login?username=${cod_company}&usercode=${cod_user}&app=painel/petrolub/ba/login`);
+      window.location.assign(`${this.baseUrl}/login?username=${cod_company}&usercode=${cod_user}&app=painel/petrolub/ba`);
     }
     catch (error) {
       this.loadingService.setLoading(false);
