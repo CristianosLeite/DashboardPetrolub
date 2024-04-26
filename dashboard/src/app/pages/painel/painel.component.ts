@@ -29,7 +29,7 @@ export class PainelComponent implements OnInit, OnDestroy {
 
     setTimeout(() => {
       this.user.token === undefined ? this.notFound.notFoundEvent.emit('clientError') : null;
-    }, 100);
+    }, 400);
   }
 
   ngOnDestroy(): void {

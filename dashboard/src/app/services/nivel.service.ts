@@ -23,7 +23,7 @@ export class NivelService {
       this.lastNivel = lastNivel;
       this.LastNivelChanged.emit(this.lastNivel);
     });
-    this.subscription = interval(1000).subscribe(async () => {
+    this.subscription = interval(2000).subscribe(async () => {
       Promise.all([this.getLastNivel(), this.getNiveis()]).then(([lastNivel, niveis]) => {
         this.lastNivel = lastNivel;
         this.niveis = niveis;

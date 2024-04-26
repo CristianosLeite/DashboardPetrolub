@@ -16,7 +16,7 @@ export class ProcessoService {
       this.processos = processos;
       this.ProcessoChanged.emit(this.processos);
     }).then(() => {
-      this.subscription = interval(1000).subscribe(() => {
+      this.subscription = interval(2000).subscribe(() => {
         this.getProcessos().then((processos: Processo[]) => {
           this.processos = processos;
           this.ProcessoChanged.emit(this.processos);

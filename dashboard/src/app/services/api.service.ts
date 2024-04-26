@@ -79,17 +79,14 @@ export class ApiService {
    * @throws Retorna um erro caso não seja possível buscar as informações do usuário.
   */
   async validateToken(): Promise<ApiResponse> {
-    this.loadingService.setLoading(true);
     try {
       const response: any = await lastValueFrom(
         this.http.post(`${this.baseUrl}/login/validate-token`, null, { withCredentials: true })
       );
 
       this.UserAuthenticated.emit(response);
-      this.loadingService.setLoading(false);
       return response;
     } catch (error) {
-      this.loadingService.setLoading(false);
       throw error;
     }
   }
@@ -121,37 +118,44 @@ export class ApiService {
   }
 
   public async getProcessos(): Promise<Processo[]> {
-    const response = await lastValueFrom(this.http.get<Processo[]>(`${this.baseUrl}/processo/all`));
+    const headers = await this.headers();
+    const response = await lastValueFrom(this.http.get<Processo[]>(`${this.baseUrl}/processo/all`, { headers, withCredentials: true }));
     return response;
   }
 
   public async getProcesso(id: string): Promise<Processo> {
-    const response = await lastValueFrom(this.http.get<Processo>(`${this.baseUrl}/processo/one/${id}`));
+    const headers = await this.headers();
+    const response = await lastValueFrom(this.http.get<Processo>(`${this.baseUrl}/processo/one/${id}`, { headers, withCredentials: true }));
     return response;
   }
 
   public async getLastProcesso(): Promise<Processo> {
-    const response = await lastValueFrom(this.http.get<Processo>(`${this.baseUrl}/processo/last`));
+    const headers = await this.headers();
+    const response = await lastValueFrom(this.http.get<Processo>(`${this.baseUrl}/processo/last`, { headers, withCredentials: true }));
     return response;
   }
 
   public async getEventos(): Promise<Evento[]> {
-    const response = await lastValueFrom(this.http.get<Evento[]>(`${this.baseUrl}/evento/all`));
+    const headers = await this.headers();
+    const response = await lastValueFrom(this.http.get<Evento[]>(`${this.baseUrl}/evento/all`, { headers, withCredentials: true }));
     return response;
   }
 
   public async getNiveis(): Promise<Nivel[]> {
-    const response = await lastValueFrom(this.http.get<Nivel[]>(`${this.baseUrl}/nivel/all`));
+    const headers = await this.headers();
+    const response = await lastValueFrom(this.http.get<Nivel[]>(`${this.baseUrl}/nivel/all`, { headers, withCredentials: true }));
     return response;
   }
 
   public async getNivel(id: string): Promise<Nivel> {
-    const response = await lastValueFrom(this.http.get<Nivel>(`${this.baseUrl}/nivel/one/${id}`));
+    const headers = await this.headers();
+    const response = await lastValueFrom(this.http.get<Nivel>(`${this.baseUrl}/nivel/one/${id}`, { headers, withCredentials: true }));
     return response;
   }
 
   public async getLastNivel(): Promise<Nivel> {
-    const response = await lastValueFrom(this.http.get<Nivel>(`${this.baseUrl}/nivel/last`));
+    const headers = await this.headers();
+    const response = await lastValueFrom(this.http.get<Nivel>(`${this.baseUrl}/nivel/last`, { headers, withCredentials: true }));
     return response;
   }
 }
