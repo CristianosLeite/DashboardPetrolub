@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, OnDestroy, NgZone, ViewChild } from '@angular/core';
+import { Component, OnInit, OnChanges, NgZone, ViewChild, OnDestroy } from '@angular/core';
 import { ProcessoService } from '../../services/processo.service';
 import { Processo } from '../../interfaces/processo.interface';
 import { Subscription, interval } from 'rxjs';
@@ -21,11 +21,7 @@ export class QntLitrosComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
   dateRange: Date[] = [new Date(new Date(new Date().setDate(new Date().getDate() - 8))), new Date()];
 
-  constructor(private processoService: ProcessoService, private ngZone: NgZone, private dateService: DateService, private loadingService: LoadingService) {
-    this.dateService.DateChanged.subscribe((dateRange: Date[]) => {
-      this.dateRange = dateRange;
-    });
-  }
+  constructor(private processoService: ProcessoService, private ngZone: NgZone, private dateService: DateService, private loadingService: LoadingService) { }
 
   processos = [] as Processo[];
   litrosCarregamento = 0;
@@ -72,43 +68,50 @@ export class QntLitrosComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription = interval(1000).subscribe(() => {
-      this.ngZone.run(async () => {
-        this.setData(this.dateRange[0], this.dateRange[1]);
-      });
+    this.processoService.getProcessos();
+    this.processoService.ProcessoChanged.subscribe((processos) => {
+      this.processos = processos;
+      this.updateChart();
+    });
+    this.subscription = interval(60000).subscribe(() => {
+      this.processoService.getProcessos();
+      this.updateChart();
+    });
+    this.dateService.DateChanged.subscribe((dateRange: Date[]) => {
+      this.dateRange = dateRange;
     });
   }
 
   ngOnChanges(): void {
-    this.loadingService.setLoading(true);
-    setTimeout(() => {
-      this.chart?.update();
-      this.loadingService.setLoading(false);
-    }, 2000);
+    this.chart?.update();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  async setData(startDate: Date, endDate: Date) {
-    this.processoService.ProcessoChanged.subscribe((processos) => {
-      this.processos = processos;
-      this.litrosDescarregamento = 0;
-      this.litrosCarregamento = 0;
-      processos.forEach((processo) => {
-        const processoDate = new Date(processo.data_hora_inicio);
-        if (processoDate >= startDate && processoDate <= endDate) {
-          if (processo.tipo_operacao === 'DESCARREGAMENTO') {
-            this.litrosDescarregamento += processo.total_litros_processo;
-          } else if (processo.tipo_operacao === 'CARREGAMENTO') {
-            this.litrosCarregamento += processo.total_litros_processo;
-          }
-        }
-      });
-      this.dataset.datasets[0].data[0] = this.litrosCarregamento;
-      this.dataset.datasets[0].data[1] = this.litrosDescarregamento;
+  updateChart() {
+    this.ngZone.run(() => {
+      this.setData(this.dateRange[0], this.dateRange[1]);
       this.chart?.update();
     });
+  }
+
+  async setData(startDate: Date, endDate: Date) {
+    this.litrosDescarregamento = 0;
+    this.litrosCarregamento = 0;
+    this.processos.forEach((processo) => {
+      const processoDate = new Date(processo.data_hora_inicio);
+      if (processoDate >= startDate && processoDate <= endDate) {
+        if (processo.tipo_operacao === 'DESCARREGAMENTO') {
+          this.litrosDescarregamento += processo.total_litros_processo;
+        } else if (processo.tipo_operacao === 'CARREGAMENTO') {
+          this.litrosCarregamento += processo.total_litros_processo;
+        }
+      }
+    });
+    this.dataset.datasets[0].data[0] = this.litrosCarregamento;
+    this.dataset.datasets[0].data[1] = this.litrosDescarregamento;
+    this.chart?.update();
   }
 }

@@ -1,47 +1,36 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Nivel } from '../interfaces/nivel.interface';
 import { ApiService } from './api.service';
-import { Subscription, interval } from 'rxjs';
+import { DateService } from './date.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NivelService {
-  protected subscription: Subscription;
-  public lastNivel = {} as Nivel;
-  public niveis: Nivel[] = [];
 
   LastNivelChanged = new EventEmitter<Nivel>();
   NiveisChanged = new EventEmitter<Nivel[]>();
 
-  constructor(private apiService: ApiService) {
-    this.getNiveis().then((niveis: Nivel[]) => {
-      this.niveis = niveis;
-      this.NiveisChanged.emit(this.niveis);
-    });
-    this.getLastNivel().then((lastNivel: Nivel) => {
-      this.lastNivel = lastNivel;
-      this.LastNivelChanged.emit(this.lastNivel);
-    });
-    this.subscription = interval(2000).subscribe(async () => {
-      Promise.all([this.getLastNivel(), this.getNiveis()]).then(([lastNivel, niveis]) => {
-        this.lastNivel = lastNivel;
-        this.niveis = niveis;
-      });
-      this.LastNivelChanged.emit(this.lastNivel);
-      this.NiveisChanged.emit(this.niveis);
+  constructor(private apiService: ApiService, private dateService: DateService) {
+    this.dateService.DateChanged.subscribe(() => {
+      this.getNiveis();
+      this.getLastNivel();
     });
   }
 
-  public async getNiveis(): Promise<Nivel[]> {
-    return await this.apiService.getNiveis();
+  public async getNiveis() {
+    await this.apiService.getNiveis().then((niveis: Nivel[]) => {
+      this.NiveisChanged.emit(niveis);
+    });
   }
 
   public getNivel(id: string): Promise<Nivel> {
     return this.apiService.getNivel(id);
   }
 
-  public async getLastNivel(): Promise<Nivel> {
-    return await this.apiService.getLastNivel();
+  public async getLastNivel() {
+    await this.apiService.getLastNivel().then((nivel: Nivel) => {
+      this.LastNivelChanged.emit(nivel);
+    });
   }
 }

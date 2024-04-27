@@ -1,39 +1,36 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { ApiService } from './api.service';
 import { Processo } from '../interfaces/processo.interface';
-import { Subscription, interval } from 'rxjs';
+import { DateService } from './date.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProcessoService {
-  protected subscription: Subscription = new Subscription();
-  public processos = [] as Processo[];
-  ProcessoChanged = new EventEmitter<Processo[]>();
 
-  constructor(private apiService: ApiService) {
-    this.getProcessos().then((processos: Processo[]) => {
-      this.processos = processos;
-      this.ProcessoChanged.emit(this.processos);
-    }).then(() => {
-      this.subscription = interval(2000).subscribe(() => {
-        this.getProcessos().then((processos: Processo[]) => {
-          this.processos = processos;
-          this.ProcessoChanged.emit(this.processos);
-        });
-      });
+  ProcessoChanged = new EventEmitter<Processo[]>();
+  lastProcessoChanged = new EventEmitter<Processo>();
+
+  constructor(private apiService: ApiService, private dateService: DateService) {
+    this.dateService.DateChanged.subscribe(() => {
+      this.getProcessos();
+      this.getLastProcesso();
     });
   }
 
-  public getProcessos(): Promise<Processo[]> {
-    return this.apiService.getProcessos();
+  public async getProcessos() {
+    await this.apiService.getProcessos().then((processos: Processo[]) => {
+      this.ProcessoChanged.emit(processos);
+    });
   }
 
   public getProcesso(id: string): Promise<Processo> {
     return this.apiService.getProcesso(id);
   }
 
-  public getLastProcesso(): Promise<Processo> {
-    return this.apiService.getLastProcesso();
+  public async getLastProcesso() {
+    await this.apiService.getLastProcesso().then((processo: Processo) => {
+      this.lastProcessoChanged.emit(processo);
+    });
   }
 }

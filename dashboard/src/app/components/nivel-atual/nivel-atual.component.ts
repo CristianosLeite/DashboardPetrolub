@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, OnChanges, NgZone, ViewChild } from '@angular/core';
+import { Component, OnInit, OnChanges, NgZone, ViewChild, OnDestroy } from '@angular/core';
 import { NivelService } from '../../services/nivel.service';
 import { Subscription, interval } from 'rxjs';
 import { Dataset } from '../../interfaces/dataset.interface';
@@ -57,20 +57,27 @@ export class NivelAtualComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private nivelService: NivelService, private ngZone: NgZone) { }
 
   ngOnInit(): void {
-    this.subscription = interval(1000).subscribe(() => {
-      this.ngZone.run(async () => {
-        this.nivelService.LastNivelChanged.subscribe(nivel => {
-          this.dataset.datasets[0].data = [nivel[0].nivel_tq_med_1, nivel[0].nivel_tq_med_2, nivel[0].nivel_tq_arm_1, nivel[0].nivel_tq_arm_2, nivel[0].nivel_tq_arm_3, nivel[0].nivel_tq_arm_4];
-        });
-      });
+    this.nivelService.getLastNivel();
+    this.nivelService.LastNivelChanged.subscribe(nivel => {
+      this.dataset.datasets[0].data = [nivel[0].nivel_tq_med_1, nivel[0].nivel_tq_med_2, nivel[0].nivel_tq_arm_1, nivel[0].nivel_tq_arm_2, nivel[0].nivel_tq_arm_3, nivel[0].nivel_tq_arm_4];
     });
+    this.subscription.add(interval(60000).subscribe(() => {
+      this.nivelService.getLastNivel();
+      this.updateChart();
+    }));
   }
 
   ngOnChanges(): void {
-    this.chart?.update();
+    this.updateChart();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  updateChart() {
+    this.ngZone.run(() => {
+      this.chart?.update();
+    });
   }
 }

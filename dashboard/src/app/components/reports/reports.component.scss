@@ -1,0 +1,22 @@
+.container-lg {
+  margin-top: 50px;
+}
+
+.card {
+  border: none;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.btn {
+  margin: 0;
+  max-width: 160px;
+  margin-top: 20px;
+}

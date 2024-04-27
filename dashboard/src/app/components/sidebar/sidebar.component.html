@@ -5,15 +5,15 @@
     <img src="../../assets/petrolub.png" alt="logo" class="logo" *ngIf="isExpanded"/>
   </div>
   <div class="icons">
-    <a class="slot" routerLink="/home" routerLinkActive="active" ariaCurrentWhenActive="page">
+    <a class="slot" routerLink="home" routerLinkActive="active" ariaCurrentWhenActive="page">
       <i class="bi bi-graph-up icon"></i>
       <p *ngIf="isExpanded">Dashboard</p>
     </a>
-    <a class="slot" routerLink="/pendings">
+    <a class="slot" routerLink="ticket">
       <i class="bi bi-ticket-detailed icon"></i>
       <p *ngIf="isExpanded">Tickets</p>
     </a>
-    <a class="slot" routerLink="/reports">
+    <a class="slot" routerLink="reports">
       <i class="bi bi-receipt-cutoff icon"></i>
       <p *ngIf="isExpanded">Relatórios</p>
     </a>

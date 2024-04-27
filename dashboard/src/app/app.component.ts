@@ -51,7 +51,7 @@ export class AppComponent {
       this.param = '';
       await this.apiService.validateToken().then((response: ApiResponse) => {
         if (response.token) {
-          this.router.navigate(['painel/petrolub/ba/dashboard']);
+          this.router.navigate(['painel/petrolub/ba/dashboard/home']);
         }
     }).catch(() => {
       console.log('Token inválido ou não encontrado.');

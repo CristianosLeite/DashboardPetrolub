@@ -1,0 +1,51 @@
+<div class="container-lg">
+  <div class="card">
+    <div class="card-header">
+      <h3>Criar um relatório</h3>
+    </div>
+    <div class="card-body">
+      <h5>Selecione o período do relatório</h5>
+      <app-period-selector (periodChanged)="periodChanged($event)"></app-period-selector>
+      <h5>Defina o tipo de relatório</h5>
+      <p>Selecione entre as opções os dados que deseja analisar no relatório.</p>
+      <form #formOptions="ngForm">
+        <div class="options">
+          <div class="option">
+            <input type="checkbox" id="option1" name="option1" value="option1" [(ngModel)]="reportOptions.cbProcessos"
+              name="cbProcessos">
+            <label for="option1">Processos</label>
+          </div>
+          <div class="option">
+            <input type="checkbox" id="option2" name="option2" value="option2" [(ngModel)]="reportOptions.cbNiveis"
+              name="cbNiveis">
+            <label for="option2">Níveis</label>
+          </div>
+          <div class="option">
+            <input type="checkbox" id="option3" name="option3" value="option3" [(ngModel)]="reportOptions.cbEventos"
+              name="cbEventos">
+            <label for="option3">Eventos</label>
+          </div>
+        </div>
+        <h5>Relacionameto dos dados</h5>
+        <p>Defina o cruzamento dos dados que deseja fazer no relatório</p>
+        <div class="options">
+          <div class="option">
+            <input type="checkbox" id="option4" name="option4" value="option4"
+              [(ngModel)]="reportOptions.cbProcessosNiveis" name="cbProcessosNiveis">
+            <label for="option4">Processos x Níveis</label>
+          </div>
+          <div class="option">
+            <input type="checkbox" id="option5" name="option5" value="option5"
+              [(ngModel)]="reportOptions.cbProcessosEventos" name="cbProcessosEventos">
+            <label for="option5">Processos x Eventos</label>
+          </div>
+          <div class="option">
+            <input type="checkbox" id="option6" name="option6" value="option6"
+              [(ngModel)]="reportOptions.cbNiveisEventos" name="cbNiveisEventos">
+            <label for="option6">Níveis x Eventos</label>
+          </div>
+          <button class="btn btn-success" (click)="generateReport()">Gerar relatório</button>
+        </div>
+      </form>
+    </div>
+  </div>

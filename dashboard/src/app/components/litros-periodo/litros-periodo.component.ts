@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, OnDestroy, NgZone, ViewChild } from '@angular/core';
+import { Component, OnInit, OnChanges, NgZone, ViewChild, OnDestroy } from '@angular/core';
 import { ProcessoService } from '../../services/processo.service';
 import { Subscription, interval } from 'rxjs';
 import { Processo } from '../../interfaces/processo.interface';
@@ -7,7 +7,6 @@ import { BarChartOptionsInterface } from '../../interfaces/barChartOptions.inter
 import { BaseChartDirective } from 'ng2-charts';
 import { GraphComponent } from '../graph/graph.component';
 import { DateService } from '../../services/date.service';
-import { LoadingService } from '../../services/loading.service';
 
 @Component({
   selector: 'app-litros-periodo',
@@ -22,11 +21,7 @@ export class LitrosPeriodoComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
   dateRange: Date[] = [new Date((new Date().setDate(new Date().getDate() - 8))), new Date()];
 
-  constructor(private processoService: ProcessoService, private ngZone: NgZone, private dateService: DateService, private loadingService: LoadingService) {
-    this.dateService.DateChanged.subscribe((dateRange: Date[]) => {
-      this.dateRange = dateRange;
-    });
-  }
+  constructor(private processoService: ProcessoService, private ngZone: NgZone, private dateService: DateService) { }
 
   processos = [] as Processo[];
   litrosCarregamento: number[] = [0, 0, 0, 0, 0, 0, 0];
@@ -81,17 +76,27 @@ export class LitrosPeriodoComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadingService.setLoading(true);
+    this.processoService.getProcessos();
     this.processoService.ProcessoChanged.subscribe((processos) => {
       this.processos = processos;
-      this.ngZone.run(() => {
-        this.setData();
-      });
-      this.setDatasetLabels();
+      this.updateChart();
     });
-    setTimeout(() => {
-      this.loadingService.setLoading(false);
-    }, 2000);
+    this.setData();
+    this.subscription.add(interval(60000).subscribe(() => {
+      this.processoService.getProcessos();
+    }));
+    this.dateService.DateChanged.subscribe((dateRange: Date[]) => {
+      this.dateRange = dateRange;
+      this.updateChart();
+    });
+  }
+
+  updateChart() {
+    this.ngZone.run(() => {
+      this.setData();
+      this.setDatasetLabels();
+      this.chart?.update();
+    });
   }
 
   setData() {
@@ -129,7 +134,7 @@ export class LitrosPeriodoComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(): void {
-    this.chart?.update();
+    this.updateChart();
   }
 
   ngOnDestroy(): void {

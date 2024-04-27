@@ -2,21 +2,19 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { HeaderComponent } from '../../components/header/header.component';
-import { DashboardComponent } from '../../components/dashboard/dashboard.component';
 import { NgIf } from '@angular/common';
 import { ApiResponse, ApiService } from '../../services/api.service';
 import { NotFoundService } from '../../services/not-found.service';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-painel',
   standalone: true,
-  imports: [SidebarComponent, FooterComponent, HeaderComponent, DashboardComponent, NgIf],
+  imports: [SidebarComponent, FooterComponent, HeaderComponent, RouterOutlet, NgIf],
   templateUrl: './painel.component.html',
   styleUrl: './painel.component.scss'
 })
 export class PainelComponent implements OnInit, OnDestroy {
-  selectedComponent: string = 'dashboard';
-
   user = {} as ApiResponse;
 
   constructor(private apiService: ApiService, private notFound: NotFoundService) { }

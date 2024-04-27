@@ -7,6 +7,7 @@ import { LitrosPeriodoComponent } from '../litros-periodo/litros-periodo.compone
 import { PeriodSelectorComponent } from '../period-selector/period-selector.component';
 import { NgComponentOutlet, NgFor } from '@angular/common';
 import { DateService } from '../../services/date.service';
+import { LoadingService } from '../../services/loading.service';
 
 interface WidgetIndex { id: number; name: string; }
 
@@ -18,9 +19,13 @@ interface WidgetIndex { id: number; name: string; }
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
-  nivelAtualComponent = NivelAtualComponent;
 
-  constructor(private dateService: DateService) { }
+  constructor(private dateService: DateService, private loadingService: LoadingService) {
+    this.loadingService.setLoading(true);
+    setTimeout(() => {
+      this.loadingService.setLoading(false);
+    }, 2000);
+  }
 
   isMobile: boolean = false;
 

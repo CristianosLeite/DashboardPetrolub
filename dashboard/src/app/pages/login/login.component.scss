@@ -53,6 +53,12 @@ button:hover {
   color: #f4f4f4;
 }
 
+button:disabled {
+  background-color: #f4f4f4;
+  color: #1D4A22;
+  cursor: not-allowed;
+}
+
 @media screen and (max-width: 720px)
 {
   .card {
