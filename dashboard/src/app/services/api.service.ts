@@ -59,13 +59,13 @@ export class ApiService {
 
   /**
   * @description Redireciona o usuário para a página de autenticação.
-  * @param cod_company Código da empresa.
-  * @param cod_user Código do usuário.
+  * @param username Nome do usuário.
+  * @param usercode Código do usuário.
  */
-  private getToken(cod_company: string, cod_user: string): void {
+  private getToken(username: string, usercode: string): void {
     this.loadingService.setLoading(true);
     try {
-      window.location.assign(`${this.baseUrl}/login?username=${cod_company}&usercode=${cod_user}&app=painel/petrolub/ba`);
+      window.location.assign(`${this.baseUrl}/login?username=${username}&usercode=${usercode}&app=painel/petrolub/ba`);
     }
     catch (error) {
       this.loadingService.setLoading(false);

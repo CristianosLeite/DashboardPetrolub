@@ -4,6 +4,8 @@ import { ProcessoService } from './processo.service';
 import { NivelService } from './nivel.service';
 import { Processo } from '../interfaces/processo.interface';
 import { Nivel } from '../interfaces/nivel.interface';
+import { PdfService, ReportData, ReportType } from './pdf.service';
+import { reportOptions as ReportOptions } from '../interfaces/reportOptions.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +18,14 @@ export class ReportService {
   constructor(
     private dateService: DateService,
     private processoService: ProcessoService,
-    private nivelService: NivelService
+    private nivelService: NivelService,
+    private pdfService: PdfService
   ) {
+    this.processoService.getProcessos();
     this.processoService.ProcessoChanged.subscribe((processos: Processo[]) => {
       this.processos = processos;
     });
+    this.nivelService.getNiveis();
     this.nivelService.NiveisChanged.subscribe((niveis: Nivel[]) => {
       this.niveis = niveis;
     });
@@ -29,7 +34,7 @@ export class ReportService {
     });
   }
 
-  async generateReport(reportOptions: any) {
+  async generateReport(dateRange: Date[], reportOptions: ReportOptions) {
     const processos = this.processos.filter(processo => {
       const processoDate = new Date(processo.data_hora_inicio);
       return processoDate >= this.dateRange[0] && processoDate <= this.dateRange[1];
@@ -43,7 +48,21 @@ export class ReportService {
       processosEventos: reportOptions.cbProcessosEventos ? this.getProcessosEventos(processos) : [],
       niveisEventos: reportOptions.cbNiveisEventos ? this.getNiveisEventos(niveis) : []
     }
-    console.log(report);
+
+    let reportType: ReportType = null;
+    if (reportOptions.cbProcessos) {
+      reportType = 'processos';
+    } else if (reportOptions.cbNiveis) {
+      reportType = 'niveis';
+    } else if (reportOptions.cbEventos) {
+      reportType = 'eventos';
+    }
+    if (! reportType) {
+      alert('Selecione um tipo de relatório para gerar');
+      return;
+    }
+
+    this.pdfService.generatePdf(dateRange, reportType, report);
   }
 
   getProcessosNiveis(processos: Processo[], niveis: Nivel[]) {

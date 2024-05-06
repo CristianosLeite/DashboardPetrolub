@@ -51,6 +51,7 @@ export class AppComponent {
       this.param = '';
       await this.apiService.validateToken().then((response: ApiResponse) => {
         if (response.token) {
+          localStorage.setItem('User', response.data.name);
           this.router.navigate(['painel/petrolub/ba/dashboard/home']);
         }
     }).catch(() => {
