@@ -59,7 +59,7 @@ export class NivelAtualComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit(): void {
     this.nivelService.getLastNivel();
     this.nivelService.LastNivelChanged.subscribe(nivel => {
-      this.dataset.datasets[0].data = [nivel[0].nivel_tq_med_1, nivel[0].nivel_tq_med_2, nivel[0].nivel_tq_arm_1, nivel[0].nivel_tq_arm_2, nivel[0].nivel_tq_arm_3, nivel[0].nivel_tq_arm_4];
+     this.dataset.datasets[0].data = [nivel.nivel_tq_med_1, nivel.nivel_tq_med_2, nivel.nivel_tq_arm_1, nivel.nivel_tq_arm_2, nivel.nivel_tq_arm_3, nivel.nivel_tq_arm_4];
     });
     this.subscription.add(interval(60000).subscribe(() => {
       this.nivelService.getLastNivel();

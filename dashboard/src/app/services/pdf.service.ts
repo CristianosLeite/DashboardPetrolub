@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
-import { Processo } from '../interfaces/processo.interface';
-import { Nivel } from '../interfaces/nivel.interface';
-import { Evento } from '../interfaces/eventos.interface';
+import { ReportData } from '../interfaces/reportData.interface';
 
 declare module "jspdf" {
   interface jsPDF {
@@ -12,14 +10,6 @@ declare module "jspdf" {
 }
 
 export type ReportType = 'processos' | 'niveis' | 'eventos' | null;
-export interface ReportData {
-  eventos: Evento[],
-  niveis: Nivel[],
-  niveisEventos: [],
-  processos: Processo[],
-  processosEventos: [],
-  processosNiveis: []
-};
 
 @Injectable({
   providedIn: 'root'
@@ -27,12 +17,18 @@ export interface ReportData {
 
 export class PdfService {
   pdf = new jsPDF('p', 'pt', 'a4');
+
   constructor() { }
 
-  generatePdf(dateRange: Date[], reportType: ReportType, data: any) {
+  generatePdf(dateRange: Date[], reportType: ReportType, data: ReportData) {
+    const template = "../../assets/templatePage1.webp";
+    this.pdf.addImage(template, 'JPEG', 0, 0, 595, 842);
+
+    this.createDataHeader(dateRange, data);
+
     switch (reportType) {
       case 'processos':
-        this.generateProcessosPdf(dateRange, data);
+        this.generateProcessosPdf(data);
         break;
       case 'niveis':
         console.log('niveis');
@@ -43,10 +39,12 @@ export class PdfService {
         //this.generateEventosPdf([]);
         break;
     }
+    this.pdf.save(
+      `Relatório de ${reportType} ${dateRange[0].toLocaleDateString()} - ${dateRange[1].toLocaleDateString()}.pdf`
+    );
   }
 
-  generateProcessosPdf(dateRange: Date[], data: ReportData) {
-    const template = "../../assets/templatePage1.webp";
+  createDataHeader(dateRange: Date[], data: ReportData) {
     const title = "Relatório de Processos";
     const user = localStorage.getItem('User')?.toString() ?? '';
     const litrosDescarregamento = data.processos
@@ -58,7 +56,6 @@ export class PdfService {
       .map(processo => processo.total_litros_processo)
       .reduce((a, b) => a + b, 0);
 
-    this.pdf.addImage(template, 'JPEG', 0, 0, 595, 842);
     this.pdf.setFontSize(28);
     this.pdf.setFont("times", "bold");
     this.pdf.setTextColor(255, 255, 255);
@@ -67,17 +64,30 @@ export class PdfService {
     this.pdf.setFontSize(12);
     this.pdf.setFont("times", "normal");
     this.pdf.setTextColor(0, 0, 0);
-    this.pdf.text("Período selecionado: " + dateRange[0].toLocaleDateString() + " - " + dateRange[1].toLocaleDateString(), 15, 70);
-    this.pdf.text("Data/Hora emissão: " + new Date().toLocaleDateString() + " - " + new Date().toLocaleTimeString(), 15, 90);
+    this.pdf.text("Período selecionado: " +
+      dateRange[0].toLocaleDateString() + " - " +
+      dateRange[1].toLocaleDateString(), 15, 70);
+    this.pdf.text("Data/Hora emissão: " +
+      new Date().toLocaleDateString() + " - " +
+      new Date().toLocaleTimeString(), 15, 90);
     this.pdf.text("Emitido por: " + user, 15, 110);
 
-    this.pdf.text("Total de processos: " + data.processos.length.toString(), 300, 70);
-    this.pdf.text("Total de litros Decarregamento: " + litrosDescarregamento.toFixed(2).toString(), 300, 90);
-    this.pdf.text("Total de litros Carregamento: " + litrosCarregamento.toFixed(2).toString(), 300, 110);
+    this.pdf.text("Total de processos: " +
+      data.processos.length.toString(), 300, 70);
+    this.pdf.text("Total de litros Decarregamento: " +
+      litrosDescarregamento.toFixed(2).toString(), 300, 90);
+    this.pdf.text("Total de litros Carregamento: " +
+      litrosCarregamento.toFixed(2).toString(), 300, 110);
+  }
+
+  generateProcessosPdf(data: ReportData) {
+    if (data.processos.length === 0) {
+      alert('Nenhum processo encontrado no período selecionado');
+      return;
+    }
 
     this.pdf.autoTable({
       tableWidth: 'auto',
-
       startY: 150,
       margin: { top: 50, right: 15, bottom: 50, left: 15 },
       columns: [
@@ -99,8 +109,10 @@ export class PdfService {
           "processo_id": processo.processo_id,
           "ticket": processo.ticket,
           "tipo_operacao": processo.tipo_operacao,
-          "data_hora_inicio": processo.data_hora_inicio.replace('T', ' ').replace('Z', '').split('.')[0],
-          "data_hora_fim": processo.data_hora_fim.replace('T', ' ').replace('Z', '').split('.')[0],
+          "data_hora_inicio": processo.data_hora_inicio
+            .replace('T', ' ').replace('Z', '').split('.')[0],
+          "data_hora_fim": processo.data_hora_fim
+            .replace('T', ' ').replace('Z', '').split('.')[0],
           "operador": processo.operador,
           "motorista": processo.motorista,
           "placa": processo.placa,
@@ -127,6 +139,5 @@ export class PdfService {
         11: { fillColor: [255, 255, 255], fontSize: 7 }
       }
     });
-    this.pdf.save('test.pdf');
   }
 }

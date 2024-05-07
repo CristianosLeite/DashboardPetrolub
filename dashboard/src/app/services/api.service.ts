@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { LoadingService } from './loading.service';
 import { Processo } from '../interfaces/processo.interface';
-import { Evento } from '../interfaces/eventos.interface';
+import { Evento } from '../interfaces/evento.interface';
 import { Nivel } from '../interfaces/nivel.interface';
 import { User } from '../interfaces/user.interface';
 
@@ -153,9 +153,9 @@ export class ApiService {
     return response;
   }
 
-  public async getLastNivel(): Promise<Nivel> {
+  public async getLastNivel(): Promise<Nivel[]> {
     const headers = await this.headers();
-    const response = await lastValueFrom(this.http.get<Nivel>(`${this.baseUrl}/nivel/last`, { headers, withCredentials: true }));
+    const response = await lastValueFrom(this.http.get<Nivel[]>(`${this.baseUrl}/nivel/last`, { headers, withCredentials: true }));
     return response;
   }
 }

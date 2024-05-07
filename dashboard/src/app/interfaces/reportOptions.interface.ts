@@ -1,4 +1,4 @@
-export interface reportOptions {
+export interface ReportOptions {
   cbProcessos: boolean;
   cbNiveis: boolean;
   cbEventos: boolean;

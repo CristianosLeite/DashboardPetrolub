@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PeriodSelectorComponent } from '../period-selector/period-selector.component';
 import { ReportService } from '../../services/report.service';
 import { FormsModule } from '@angular/forms';
 import { DateService } from '../../services/date.service';
-import { reportOptions } from '../../interfaces/reportOptions.interface';
+import { ReportOptions } from '../../interfaces/reportOptions.interface';
 
 @Component({
   selector: 'app-reports',
@@ -13,7 +13,7 @@ import { reportOptions } from '../../interfaces/reportOptions.interface';
   styleUrl: './reports.component.scss'
 })
 export class ReportsComponent {
-  reportOptions: reportOptions = {
+  reportOptions: ReportOptions = {
     cbProcessos: false,
     cbNiveis: false,
     cbEventos: false,

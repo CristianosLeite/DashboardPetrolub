@@ -29,8 +29,8 @@ export class NivelService {
   }
 
   public async getLastNivel() {
-    await this.apiService.getLastNivel().then((nivel: Nivel) => {
-      this.LastNivelChanged.emit(nivel);
+    await this.apiService.getLastNivel().then((nivel: Nivel[]) => {
+      this.LastNivelChanged.emit(nivel[0]);
     });
   }
 }

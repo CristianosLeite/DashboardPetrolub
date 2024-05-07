@@ -1,5 +1,5 @@
 import { Batelada } from "./batelada.interface";
-import { Evento } from "./eventos.interface";
+import { Evento } from "./evento.interface";
 
 export interface Processo {
   processo_id: number;

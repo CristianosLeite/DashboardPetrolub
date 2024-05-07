@@ -4,8 +4,25 @@ import { ProcessoService } from './processo.service';
 import { NivelService } from './nivel.service';
 import { Processo } from '../interfaces/processo.interface';
 import { Nivel } from '../interfaces/nivel.interface';
-import { PdfService, ReportData, ReportType } from './pdf.service';
-import { reportOptions as ReportOptions } from '../interfaces/reportOptions.interface';
+import { PdfService, ReportType } from './pdf.service';
+import { ReportData } from '../interfaces/reportData.interface';
+import { Evento } from '../interfaces/evento.interface';
+import { ReportOptions } from '../interfaces/reportOptions.interface';
+
+export type ProcessosNiveis = {
+  processo: Processo;
+  nivel: Nivel;
+}
+
+export type ProcessosEventos = {
+  processo: Processo;
+  eventos: Evento[];
+}
+
+export type NiveisEventos = {
+  nivel: Nivel;
+  eventos: Evento[];
+}
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +57,8 @@ export class ReportService {
       return processoDate >= this.dateRange[0] && processoDate <= this.dateRange[1];
     });
     const niveis = this.niveis;
-    const report = {
+
+    const report: ReportData = {
       processos: reportOptions.cbProcessos ? processos : [],
       niveis: reportOptions.cbNiveis ? niveis : [],
       eventos: reportOptions.cbEventos ? [] : [],
@@ -62,12 +80,13 @@ export class ReportService {
       return;
     }
 
+    console.log(report);
     this.pdfService.generatePdf(dateRange, reportType, report);
   }
 
-  getProcessosNiveis(processos: Processo[], niveis: Nivel[]) {
+  getProcessosNiveis(processos: Processo[], niveis: Nivel[]): ProcessosNiveis[] {
     return processos.map(processo => {
-      const nivel = niveis.find(nivel => nivel[0].processo_id === processo.processo_id);
+      const nivel = niveis.find(nivel => nivel.processo_id === processo.processo_id)!;
       return {
         processo: processo,
         nivel: nivel
@@ -75,7 +94,7 @@ export class ReportService {
     });
   }
 
-  getProcessosEventos(processos: Processo[]) {
+  getProcessosEventos(processos: Processo[]): ProcessosEventos[] {
     return processos.map(processo => {
       return {
         processo: processo,
@@ -84,7 +103,7 @@ export class ReportService {
     });
   }
 
-  getNiveisEventos(niveis: Nivel[]) {
+  getNiveisEventos(niveis: Nivel[]): NiveisEventos[] {
     return niveis.map(nivel => {
       return {
         nivel: nivel,
