@@ -6,6 +6,15 @@
   height: 90vh;
 }
 
+.card {
+  display: flex;
+  border-radius: 0;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 .side {
   position: fixed;
   top: 0;

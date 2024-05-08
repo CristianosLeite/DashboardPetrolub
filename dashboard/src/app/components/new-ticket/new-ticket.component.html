@@ -1,0 +1,53 @@
+<!-- new-user.component.html -->
+<div class="modal-header">
+  <h4 class="modal-title">Cadastrar novo ticket</h4>
+</div>
+<div class="modal-body">
+  <form #userForm="ngForm">
+    <div class="form-group">
+      <label for="operation">Tipo de Operação:</label>
+      <select id="operation" class="form-control" name="operation" [(ngModel)]="newTicket.operation" required>
+        <option value="" disabled selected>Selecione uma opção</option>
+        <option value="carregamento">Carregamento</option>
+        <option value="desccarregamento">Descarregamento</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="branch">Filial:</label>
+      <select id="branch" class="form-control" name="branch" [(ngModel)]="newTicket.branch" required>
+        <option value="" disabled selected>Selecione uma opção</option>
+        <option value="cjba">Conceição do Jacuípe - BA</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="description">Descrição:</label>
+      <input type="text" id="description" class="form-control" name="description" [(ngModel)]="newTicket.description"
+      maxlength="500"
+      >
+    </div>
+    <div class="form-group">
+      <label for="driver">Motorista:</label>
+      <input type="text" id="driver" class="form-control" name="driver" [(ngModel)]="newTicket.driver" required
+      maxlength="50"
+      pattern="^[a-zA-Z\u00C0-\u00FF]*$"
+      >
+    </div>
+    <div class="form-group">
+      <label for="plate">Placa:</label>
+      <input type="text" id="plate" class="form-control" name="plate" [(ngModel)]="newTicket.plate" required
+      maxlength="50"
+      pattern="^[a-zA-Z\u00C0-\u00FF]*$"
+      >
+    </div>
+    <div class="form-group">
+      <label for="volume">Volume (litros):</label>
+      <input type="number" id="volume" class="form-control" name="volume" [(ngModel)]="newTicket.volume" required
+      maxlength="15"
+      >
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-success" (click)="createTicket()">Cadastrar</button>
+  <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+</div>

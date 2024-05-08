@@ -6,6 +6,7 @@ import { NgIf } from '@angular/common';
 import { ApiResponse, ApiService } from '../../services/api.service';
 import { NotFoundService } from '../../services/not-found.service';
 import { RouterOutlet } from '@angular/router';
+import { WindowService } from '../../services/window.service';
 
 @Component({
   selector: 'app-painel',
@@ -16,8 +17,13 @@ import { RouterOutlet } from '@angular/router';
 })
 export class PainelComponent implements OnInit, OnDestroy {
   user = {} as ApiResponse;
+  windowTitle = 'Dashboard';
 
-  constructor(private apiService: ApiService, private notFound: NotFoundService) { }
+  constructor(private apiService: ApiService, private notFound: NotFoundService, private windowService: WindowService) {
+    this.windowService.WindowChanged.subscribe((title: string) => {
+      this.windowTitle = title;
+    });
+  }
 
   ngOnInit(): void {
     this.apiService.validateToken();

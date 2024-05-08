@@ -72,6 +72,10 @@ export class ReportService {
       return eventoDate >= this.dateRange[0] && eventoDate <= this.dateRange[1];
     });
 
+    processos.forEach(processo => {
+      processo.eventos = eventos.filter(evento => evento.processo_id === processo.processo_id);
+    });
+
     const report: ReportData = {
       processos: reportOptions.cbProcessos ? processos : [],
       niveis: reportOptions.cbNiveis ? niveis : [],

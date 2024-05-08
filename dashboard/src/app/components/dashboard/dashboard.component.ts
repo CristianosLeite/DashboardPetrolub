@@ -8,6 +8,7 @@ import { PeriodSelectorComponent } from '../period-selector/period-selector.comp
 import { NgComponentOutlet, NgFor } from '@angular/common';
 import { DateService } from '../../services/date.service';
 import { LoadingService } from '../../services/loading.service';
+import { WindowService } from '../../services/window.service';
 
 interface WidgetIndex { id: number; name: string; }
 
@@ -20,7 +21,8 @@ interface WidgetIndex { id: number; name: string; }
 })
 export class DashboardComponent {
 
-  constructor(private dateService: DateService, private loadingService: LoadingService) {
+  constructor(private dateService: DateService, private loadingService: LoadingService, private windowService: WindowService) {
+    this.windowService.changeWindowTitle('Dashboard');
     this.loadingService.setLoading(true);
     setTimeout(() => {
       this.loadingService.setLoading(false);

@@ -4,6 +4,7 @@ import { ReportService } from '../../services/report.service';
 import { FormsModule } from '@angular/forms';
 import { DateService } from '../../services/date.service';
 import { ReportOptions } from '../../interfaces/reportOptions.interface';
+import { WindowService } from '../../services/window.service';
 
 @Component({
   selector: 'app-reports',
@@ -26,8 +27,11 @@ export class ReportsComponent {
 
   constructor(
     private reportService: ReportService,
-    private dateService: DateService
-  ) { }
+    private dateService: DateService,
+    private windowService: WindowService
+  ) {
+    this.windowService.changeWindowTitle('Relatórios');
+  }
 
   generateReport() {
     this.reportService.generateReport(this.dateRange, this.reportOptions);
