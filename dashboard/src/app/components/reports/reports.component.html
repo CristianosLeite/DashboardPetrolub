@@ -1,7 +1,7 @@
 <div class="container-lg">
   <div class="card">
     <div class="card-header">
-      <h3>Criar um relatório</h3>
+      <h3>Gerar relatório personalizado</h3>
     </div>
     <div class="card-body">
       <h5>Selecione o período do relatório</h5>
@@ -12,18 +12,18 @@
         <div class="options">
           <div class="option">
             <input type="checkbox" id="option1" name="option1" value="option1" [(ngModel)]="reportOptions.cbProcessos"
-              name="cbProcessos">
-            <label for="option1">Processos</label>
+              name="cbProcessos" (click)="uncheckOthers('cbProcessos')">
+            <label for="option1">Processos (Todos os processos que ocorreram no período selecionado)</label>
           </div>
           <div class="option">
             <input type="checkbox" id="option2" name="option2" value="option2" [(ngModel)]="reportOptions.cbNiveis"
-              name="cbNiveis">
-            <label for="option2">Níveis</label>
+              name="cbNiveis" (click)="uncheckOthers('cbNiveis')">
+            <label for="option2">Níveis (Todos os níveis coletados no período selecionado)</label>
           </div>
           <div class="option">
             <input type="checkbox" id="option3" name="option3" value="option3" [(ngModel)]="reportOptions.cbEventos"
-              name="cbEventos">
-            <label for="option3">Eventos</label>
+              name="cbEventos" (click)="uncheckOthers('cbEventos')">
+            <label for="option3">Eventos (Todos os eventos que ocorreram no período selecionado)</label>
           </div>
         </div>
         <h5>Relacionameto dos dados</h5>

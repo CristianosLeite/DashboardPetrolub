@@ -37,4 +37,17 @@ export class ReportsComponent {
     this.dateRange = [dateRange[0], new Date(new Date(dateRange[1]).setDate(dateRange[1].getDate() - 1))];
     this.dateService.DateChanged.emit(dateRange);
   }
+
+  uncheckOthers(option: string) {
+    if (option === 'cbProcessos') {
+      this.reportOptions.cbNiveis = false;
+      this.reportOptions.cbEventos = false;
+    } else if (option === 'cbNiveis') {
+      this.reportOptions.cbProcessos = false;
+      this.reportOptions.cbEventos = false;
+    } else if (option === 'cbEventos') {
+      this.reportOptions.cbProcessos = false;
+      this.reportOptions.cbNiveis = false;
+    }
+  }
 }
