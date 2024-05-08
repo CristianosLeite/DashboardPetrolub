@@ -7,7 +7,6 @@ import { BarChartOptionsInterface } from '../../interfaces/barChartOptions.inter
 import { BaseChartDirective } from 'ng2-charts';
 import { GraphComponent } from '../graph/graph.component';
 import { DateService } from '../../services/date.service';
-import { LoadingService } from '../../services/loading.service';
 
 @Component({
   selector: 'app-qnt-litros',
@@ -21,7 +20,7 @@ export class QntLitrosComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
   dateRange: Date[] = [new Date(new Date(new Date().setDate(new Date().getDate() - 8))), new Date()];
 
-  constructor(private processoService: ProcessoService, private ngZone: NgZone, private dateService: DateService, private loadingService: LoadingService) { }
+  constructor(private processoService: ProcessoService, private ngZone: NgZone, private dateService: DateService) { }
 
   processos = [] as Processo[];
   litrosCarregamento = 0;
