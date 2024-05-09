@@ -1,5 +1,6 @@
 <div class="modal-header">
   <h4 class="modal-title">Lista de Tickets</h4>
+  <input [(ngModel)]="filter" (input)="applyFilter()" placeholder="Filtrar tickets">
 </div>
 <div class="modal-body">
   <table class="table">
@@ -13,11 +14,12 @@
         <th scope="col">Motorista</th>
         <th scope="col">Placa</th>
         <th scope="col">Volume</th>
+        <th scope="col">Data</th>
         <th scope="col">Ações</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let ticket of tickets">
+      <tr *ngFor="let ticket of filteredTickets">
         <th scope="row">{{ticket.id}}</th>
         <td>{{ticket.branch}}</td>
         <td>{{ticket.description}}</td>
@@ -26,6 +28,7 @@
         <td>{{ticket.driver}}</td>
         <td>{{ticket.plate}}</td>
         <td>{{ticket.volume}}</td>
+        <td>{{ticket.created_at | date: 'dd-MM-YYYY'}}</td>
         <td>
           <a class="btn btn-primary" (click)="editTicket(ticket)">
             <i class="bi bi-pencil"></i>

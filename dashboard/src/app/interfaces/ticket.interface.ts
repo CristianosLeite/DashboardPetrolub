@@ -2,7 +2,7 @@ export interface Ticket {
   id: number;
   branch: string;
   description: string;
-  status: string;
+  status: 'Ativo' | 'Inativo';
   operation: string;
   driver: string;
   plate: string;

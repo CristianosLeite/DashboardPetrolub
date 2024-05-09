@@ -1,0 +1,3 @@
+<div class="alert" *ngFor="let alert of alerts" [@alertFade]>
+  <alert [type]="alert.type" *ngIf="alerts.length > 0"><span [innerHtml]="alert.message"></span></alert>
+</div>

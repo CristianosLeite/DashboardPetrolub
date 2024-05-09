@@ -16,7 +16,7 @@ export class TicketComponent {
   config = {
     backdrop: true,
     ignoreBackdropClick: true,
-    class: 'modal-lg'
+    class: 'modal-xl'
   };
 
   constructor(

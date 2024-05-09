@@ -6,11 +6,13 @@ import { NotFoundService } from './services/not-found.service';
 import { LoadingComponent } from './components/loading/loading.component';
 import { NgIf } from '@angular/common';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { AlertComponent } from './components/alert/alert.component';
+import { AlertService } from './services/alert.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, LoadingComponent, NotFoundComponent, NgIf],
+  imports: [RouterOutlet, LoadingComponent, NotFoundComponent, AlertComponent, NgIf],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -20,7 +22,8 @@ export class AppComponent {
     private readonly loadingService: LoadingService,
     private readonly apiService: ApiService,
     private readonly notFoundService: NotFoundService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly alertService: AlertService
   ) { }
 
   isLoading: boolean = false;
@@ -55,7 +58,7 @@ export class AppComponent {
           this.router.navigate(['painel/petrolub/ba/dashboard/home']);
         }
     }).catch(() => {
-      console.log('Token inválido ou não encontrado.');
+      this.alertService.addAlert({type: 'danger', message: 'Erro ao validar token de autenticação.'});
     });
   }
 }

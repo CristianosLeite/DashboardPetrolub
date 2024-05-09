@@ -6,6 +6,7 @@ import { Processo } from '../interfaces/processo.interface';
 import { Evento } from '../interfaces/evento.interface';
 import { Nivel } from '../interfaces/nivel.interface';
 import { User } from '../interfaces/user.interface';
+import { Ticket } from '../interfaces/ticket.interface';
 
 export interface ApiResponse {
   message: string;
@@ -52,7 +53,7 @@ export class ApiService {
       Conection: 'keep-alive',
       Accept: '*/*',
       'Cache-Control': 'no-cache',
-      'content-type': 'application/json',
+      'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
     });
   }
@@ -156,6 +157,36 @@ export class ApiService {
   public async getLastNivel(): Promise<Nivel[]> {
     const headers = await this.headers();
     const response = await lastValueFrom(this.http.get<Nivel[]>(`${this.baseUrl}/nivel/last`, { headers, withCredentials: true }));
+    return response;
+  }
+
+  public async postTicket(ticket: Ticket): Promise<Ticket> {
+    const headers = await this.headers();
+    const response = await lastValueFrom(this.http.post<Ticket>(`${this.baseUrl}/tickets/create`, ticket, { headers, withCredentials: true, responseType: 'json' }));
+    return response;
+  }
+
+  public async getTickets(): Promise<Ticket[]> {
+    const headers = await this.headers();
+    const response = await lastValueFrom(this.http.get<Ticket[]>(`${this.baseUrl}/tickets/all`, { headers, withCredentials: true }));
+    return response;
+  }
+
+  public async getTicket(id: string): Promise<Ticket> {
+    const headers = await this.headers();
+    const response = await lastValueFrom(this.http.get<Ticket>(`${this.baseUrl}/tickets/one/${id}`, { headers, withCredentials: true }));
+    return response;
+  }
+
+  public async updateTicket(id: number, ticket: Ticket): Promise<Ticket> {
+    const headers = await this.headers();
+    const response = await lastValueFrom(this.http.patch<Ticket>(`${this.baseUrl}/tickets/update/${id}`, ticket, { headers, withCredentials: true }));
+    return response;
+  }
+
+  public async deleteTicket(id: number): Promise<Ticket> {
+    const headers = await this.headers();
+    const response = await lastValueFrom(this.http.delete<Ticket>(`${this.baseUrl}/tickets/delete/${id}`, { headers, withCredentials: true }));
     return response;
   }
 }
