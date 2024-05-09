@@ -4,7 +4,6 @@ import { Ticket } from '../../interfaces/ticket.interface';
 import { NgFor, DatePipe } from '@angular/common';
 import { TicketService } from '../../services/ticket.service';
 import { FormsModule } from '@angular/forms';
-import { LoadingService } from '../../services/loading.service';
 
 @Component({
   selector: 'app-list-tickets',
@@ -20,14 +19,11 @@ export class ListTicketsComponent {
 
   constructor(
     private bsModalRef: BsModalRef,
-    private ticketService: TicketService,
-    private loadingService: LoadingService
+    private ticketService: TicketService
   ) {
-    this.loadingService.setLoading(true);
     this.ticketService.getTickets().then((tickets: Ticket[]) => {
       this.tickets = tickets;
       this.applyFilter();
-      this.loadingService.setLoading(false);
     });
     this.ticketService.TicketChanged.subscribe((tickets: Ticket[]) => {
       this.tickets = tickets;
