@@ -4,11 +4,20 @@ import { Ticket } from '../../interfaces/ticket.interface';
 import { NgFor, DatePipe } from '@angular/common';
 import { TicketService } from '../../services/ticket.service';
 import { FormsModule } from '@angular/forms';
+import { EditTicketComponent } from '../edit-ticket/edit-ticket.component';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-list-tickets',
   standalone: true,
-  imports: [NgFor, FormsModule, DatePipe],
+  imports: [
+    NgFor,
+    FormsModule,
+    DatePipe,
+    EditTicketComponent,
+    RouterLink,
+    RouterLinkActive
+  ],
   templateUrl: './list-tickets.component.html',
   styleUrl: './list-tickets.component.scss'
 })
@@ -16,6 +25,12 @@ export class ListTicketsComponent {
   tickets: Ticket[] = [];
   filteredTickets: Ticket[] = [];
   filter: string = ''
+
+  config = {
+    backdrop: true,
+    ignoreBackdropClick: true,
+    class: 'modal-xl'
+  };
 
   constructor(
     private bsModalRef: BsModalRef,
@@ -31,12 +46,17 @@ export class ListTicketsComponent {
     });
   }
 
-  editTicket(ticket: Ticket) {
-    console.log('Edit ticket: ', ticket);
-  }
-
   deleteTicket(id: number) {
-    console.log('Delete ticket with id: ', id);
+    const ticket = this.tickets.find(ticket => ticket.id === id);
+    if (!ticket) {
+      return;
+    }
+    this.ticketService.deleteTicket(ticket).then(() => {
+      this.ticketService.getTickets().then((tickets: Ticket[]) => {
+        this.tickets = tickets;
+        this.applyFilter();
+      });
+    });
   }
 
   closeModal() {

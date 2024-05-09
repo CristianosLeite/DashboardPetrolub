@@ -1,0 +1,26 @@
+.container-lg {
+  display: flex;
+  margin-top: 50px;
+  justify-content: center;
+}
+
+.card {
+  border: none;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  min-width: 800px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn {
+  min-width: 120px;
+  max-width: 120px;
+  margin: 10px;
+}

@@ -1,0 +1,48 @@
+<div class="container-lg">
+  <div class="card">
+    <h4 class="card-header">Editar Ticket {{ticket.id}}</h4>
+    <div class="card-body">
+      <form #userForm="ngForm">
+        <div class="form-group">
+          <label for="operation">Tipo de Operação:</label>
+          <select id="operation" class="form-control" name="operation" [(ngModel)]="ticket.operation" required>
+            <option value="" disabled selected>Selecione uma opção</option>
+            <option value="carregamento">Carregamento</option>
+            <option value="descarregamento">Descarregamento</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="branch">Filial:</label>
+          <select id="branch" class="form-control" name="branch" [(ngModel)]="ticket.branch" required>
+            <option value="" disabled selected>Selecione uma opção</option>
+            <option value="cjba">Conceição do Jacuípe - BA</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="description">Descrição:</label>
+          <input type="text" id="description" class="form-control" name="description" [(ngModel)]="ticket.description"
+            maxlength="500">
+        </div>
+        <div class="form-group">
+          <label for="driver">Motorista:</label>
+          <input type="text" id="driver" class="form-control" name="driver" [(ngModel)]="ticket.driver" required
+            maxlength="50" pattern="^[a-zA-Z\u00C0-\u00FF]*$">
+        </div>
+        <div class="form-group">
+          <label for="plate">Placa:</label>
+          <input type="text" id="plate" class="form-control" name="plate" [(ngModel)]="ticket.plate" required
+            maxlength="50" pattern="^[a-zA-Z\u00C0-\u00FF]*$">
+        </div>
+        <div class="form-group">
+          <label for="volume">Volume (litros):</label>
+          <input type="number" id="volume" class="form-control" name="volume" [(ngModel)]="ticket.volume" required
+            maxlength="15">
+        </div>
+      </form>
+      <div class="card-footer">
+        <button type="button" class="btn btn-success" (click)="submit()">Salvar</button>
+        <button type="button" class="btn btn-secondary" (click)="cancel()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>

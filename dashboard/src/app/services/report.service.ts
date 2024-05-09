@@ -9,6 +9,7 @@ import { PdfService, ReportType } from './pdf.service';
 import { ReportData } from '../interfaces/reportData.interface';
 import { Evento } from '../interfaces/evento.interface';
 import { ReportOptions } from '../interfaces/reportOptions.interface';
+import { AlertService } from './alert.service';
 
 export type ProcessosNiveis = {
   processo: Processo;
@@ -39,7 +40,8 @@ export class ReportService {
     private processoService: ProcessoService,
     private nivelService: NivelService,
     private eventoService: EventoService,
-    private pdfService: PdfService
+    private pdfService: PdfService,
+    private alertService: AlertService
   ) {
     this.processoService.getProcessos();
     this.processoService.ProcessoChanged.subscribe((processos: Processo[]) => {
@@ -94,7 +96,7 @@ export class ReportService {
       reportType = 'Eventos';
     }
     if (! reportType) {
-      alert('Selecione um tipo de relatório para gerar');
+      this.alertService.addAlert({ type: 'danger', message: 'Selecione pelo menos um tipo de relatório'})
       return;
     }
 

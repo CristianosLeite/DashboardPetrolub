@@ -239,7 +239,7 @@ export class ApiService {
     }
   }
 
-  public async getTicket(id: string): Promise<Ticket> {
+  public async getTicket(id: number): Promise<Ticket> {
     const headers = await this.headers();
     try {
       const response = await lastValueFrom(this.http.get<Ticket>(`${this.baseUrl}/tickets/one/${id}`, { headers, withCredentials: true }));

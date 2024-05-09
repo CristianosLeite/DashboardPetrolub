@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Ticket } from '../../interfaces/ticket.interface';
 import { TicketService } from '../../services/ticket.service';
 import { AlertService } from '../../services/alert.service';
@@ -8,7 +8,7 @@ import { AlertService } from '../../services/alert.service';
 @Component({
   selector: 'app-new-ticket',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule],
   templateUrl: './new-ticket.component.html',
   styleUrl: './new-ticket.component.scss'
 })

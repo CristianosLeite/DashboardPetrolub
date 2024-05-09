@@ -21,6 +21,10 @@ export class TicketService {
     return this.apiService.getTickets();
   }
 
+  getTicket(id: number) {
+    return this.apiService.getTicket(id);
+  }
+
   updateTicket(ticket: Ticket) {
     return this.apiService.updateTicket(ticket.id, ticket);
   }
