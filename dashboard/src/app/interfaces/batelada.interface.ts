@@ -1,4 +1,5 @@
 export interface Batelada {
+  id: string;
   max: number;
   min: number;
   boca: string;
@@ -6,5 +7,5 @@ export interface Batelada {
 }
 
 export interface Bateladas {
-  [key: string]: Batelada;
+  [key: string]: Omit<Batelada, 'id'>;
 }

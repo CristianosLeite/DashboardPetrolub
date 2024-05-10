@@ -45,6 +45,5 @@ export class ProcessosComponent {
       bateladas: bateladas
     };
     this.bsModalRef = this.modalService.show(BateladasComponent, { initialState, backdrop: true, ignoreBackdropClick: true, class: 'modal-lg'});
-    //console.log(this.bsModalRef);
   }
 }
