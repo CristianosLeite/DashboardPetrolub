@@ -1,0 +1,30 @@
+<div class="modal-header">
+  <h4 class="modal-title">Bateladas</h4>
+</div>
+<div class="modal-body">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Batelada</th>
+        <th scope="col">Mínimo</th>
+        <th scope="col">Máximo</th>
+        <th scope="col">Total</th>
+        <th scope="col">Boca</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let batelada of bateladasArray">
+        <td>{{batelada['id']}}</td>
+        <td>{{batelada['min']}}</td>
+        <td>{{batelada['max']}}</td>
+        <td>{{batelada['total']}}</td>
+        <td>{{batelada['boca']}}</td>
+        <td>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="closeModal()">Fechar</button>
+</div>

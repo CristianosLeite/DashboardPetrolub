@@ -1,8 +1,10 @@
 export interface Batelada {
-  id: {
-    max: number;
-    min: number;
-    boca: string;
-    total: number;
-  }
+  max: number;
+  min: number;
+  boca: string;
+  total: number;
+}
+
+export interface Bateladas {
+  [key: string]: Batelada;
 }

@@ -1,1 +1,34 @@
-<p>processos works!</p>
+<div class="container-fluid">
+  <div class="card last-process"></div>
+  <div class="card process">
+    <table>
+      <tr>
+        <th>Processo</th>
+        <th>Ticket</th>
+        <th>Início</th>
+        <th>Fim</th>
+        <th>Operador</th>
+        <th>Motorista</th>
+        <th>Placa</th>
+        <th>Total listros Informado</th>
+        <th>Bateladas</th>
+        <th>Total de litros processo</th>
+      </tr>
+      <tr *ngFor="let processo of processos">
+        <td>{{ processo.processo_id }}</td>
+        <td>{{ processo.ticket }}</td>
+        <td>{{ formateDateTime(processo.data_hora_inicio)}}</td>
+        <td>{{ formateDateTime(processo.data_hora_fim) }}</td>
+        <td>{{ processo.operador }}</td>
+        <td>{{ processo.motorista }}</td>
+        <td>{{ processo.placa }}</td>
+        <td>{{ processo.qnt_litros_informado }}</td>
+        <td>{{ countBateladas(processo.bateladas) }}
+          <button class="btn-icon" *ngIf="countBateladas(processo.bateladas) > 0" (click)="openBateladasModal(processo.bateladas)">
+            <i class="bi bi-eye"></i>
+          </button>
+          </td>
+        <td>{{ processo.total_litros_processo }}</td>
+    </table>
+  </div>
+</div>
