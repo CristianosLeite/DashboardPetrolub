@@ -78,7 +78,9 @@ export class LitrosPeriodoComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit(): void {
     this.processoService.getProcessos();
     this.processoService.ProcessoChanged.subscribe((processos) => {
-      this.processos = processos;
+      this.processos = processos.sort(
+        (a, b) => new Date(a.data_hora_inicio).getTime() - new Date(b.data_hora_inicio).getTime()
+      );
       this.updateChart();
     });
     this.setData();
