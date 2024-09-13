@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { HeaderComponent } from '../../components/header/header.component';
@@ -15,7 +15,7 @@ import { WindowService } from '../../services/window.service';
   templateUrl: './painel.component.html',
   styleUrl: './painel.component.scss'
 })
-export class PainelComponent implements OnInit, OnDestroy {
+export class PainelComponent implements OnInit {
   user = {} as ApiResponse;
   windowTitle = 'Dashboard';
 
@@ -26,17 +26,14 @@ export class PainelComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.apiService.validateToken();
-    this.apiService.UserAuthenticated.subscribe((response: ApiResponse) => {
+    this.apiService.validateToken().then((response: ApiResponse) => {
       this.user = response;
+    }).catch(() => {
+      this.notFound.notFoundEvent.emit('clientError');
     });
 
     setTimeout(() => {
       this.user.token === undefined ? this.notFound.notFoundEvent.emit('clientError') : null;
     }, 400);
-  }
-
-  ngOnDestroy(): void {
-    this.apiService.UserAuthenticated.unsubscribe();
   }
 }
