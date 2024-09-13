@@ -8,11 +8,11 @@ import { EditTicketComponent } from './components/edit-ticket/edit-ticket.compon
 import { ProcessosComponent } from './components/processos/processos.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'painel/petrolub/ba/login', pathMatch: 'full'},
-  { path: 'painel/petrolub/ba', redirectTo: 'painel/petrolub/ba/login', pathMatch: 'full'},
-  { path: 'painel/petrolub/ba/login', component: LoginComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full'},
+  { path: 'painel/petrolub/ba', redirectTo: 'login', pathMatch: 'full'},
+  { path: 'login', component: LoginComponent },
   {
-    path: 'painel/petrolub/ba/dashboard',
+    path: 'dashboard',
     component: PainelComponent,
     children: [
       { path: 'home', component: DashboardComponent },
