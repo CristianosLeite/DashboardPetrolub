@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Ticket } from '../../interfaces/ticket.interface';
 import { TicketService } from '../../services/ticket.service';
 import { AlertService } from '../../services/alert.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-new-ticket',
@@ -29,11 +30,16 @@ export class NewTicketComponent {
   constructor(
     private bsModalRef: BsModalRef,
     private ticketService: TicketService,
-    private alertService: AlertService
-  ) { }
+    private alertService: AlertService,
+    private auth: AuthService
+  ) {
+    this.auth.userChanged.subscribe((user) => {
+      this.newTicket.created_by = user;
+    });
+  }
 
   createTicket() {
-    this.newTicket.created_by = localStorage.getItem('User')!.toString();
+    this.newTicket.created_by = this.auth.authenticatedUser;
     this.ticketService.createTicket(this.newTicket).then((ticket) => {
       if (!ticket) {
         this.alertService.addAlert({type: 'danger', message: 'Erro ao criar ticket!'});

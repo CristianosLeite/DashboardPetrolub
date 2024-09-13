@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { ReportData } from '../interfaces/reportData.interface';
+import { AuthService } from './auth.service';
 
 declare module "jspdf" {
   interface jsPDF {
@@ -16,11 +17,16 @@ export type ReportType = 'Processos' | 'Níveis' | 'Eventos' | null;
 })
 
 export class PdfService {
+  user = this.auth.authenticatedUser;
   pdf = new jsPDF('p', 'pt', 'a4');
   headerStyle = { fillColor: [29, 73, 35], fontSize: 7 }; // RGB for #1D4923
   columnStyle = { fillColor: [255, 255, 255], fontSize: 7 };
 
-  constructor() { }
+  constructor(private auth: AuthService) {
+    this.auth.userChanged.subscribe((user) => {
+      this.user = user;
+    });
+  }
 
   generatePdf(dateRange: Date[], reportType: ReportType, data: ReportData) {
     this.pdf = new jsPDF('p', 'pt', 'a4');
@@ -68,7 +74,7 @@ export class PdfService {
 
   createDataHeader( reportType: ReportType, dateRange: Date[], data: ReportData) {
     const title = `Relatório de ${reportType}`;
-    const user = localStorage.getItem('User')?.toString() ?? '';
+    const user = this.user;
     const litrosDescarregamento = data.processos
       .filter(processo => processo.tipo_operacao === 'DESCARREGAMENTO')
       .map(processo => processo.total_litros_processo)
