@@ -30,7 +30,7 @@
         <td>{{ticket.volume}}</td>
         <td>{{ticket.created_at | date: 'dd-MM-YYYY'}}</td>
         <td>
-          <a class="btn btn-primary" (click)="closeModal()" routerLink="painel/petrolub/ba/dashboard/ticket/edit/{{ticket.id}}">
+          <a class="btn btn-primary" (click)="closeModal()" routerLink="dashboard/ticket/edit/{{ticket.id}}">
             <i class="bi bi-pencil"></i>
           </a>
           <a class="btn btn-danger" (click)="deleteTicket(ticket.id)">
