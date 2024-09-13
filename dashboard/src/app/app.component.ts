@@ -8,6 +8,7 @@ import { NgIf } from '@angular/common';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { AlertService } from './services/alert.service';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +24,8 @@ export class AppComponent {
     private readonly apiService: ApiService,
     private readonly notFoundService: NotFoundService,
     private readonly router: Router,
-    private readonly alertService: AlertService
+    private readonly alertService: AlertService,
+    private auth: AuthService
   ) { }
 
   isLoading: boolean = false;
@@ -37,8 +39,8 @@ export class AppComponent {
     this.notFoundService.notFoundEvent.subscribe((param: string) => {
       this.param = param;
     });
-    this.apiService.UserAuthenticated.subscribe((response: ApiResponse) => {
-      this.param = response.token === undefined ? 'clientError' : '';
+    this.auth.authChanged.subscribe((status) => {
+      this.param = status ? '' : 'clientError';
     });
   }
 
@@ -51,14 +53,13 @@ export class AppComponent {
   }
 
   async validateToken(): Promise<void> {
-      this.param = '';
-      await this.apiService.validateToken().then((response: ApiResponse) => {
-        if (response.token) {
-          localStorage.setItem('User', response.data.name);
-          this.router.navigate(['painel/petrolub/ba/dashboard/home']);
-        }
+    this.param = '';
+    await this.apiService.validateToken().then((response: ApiResponse) => {
+      if (response.token) {
+        this.router.navigate(['dashboard/home']);
+      }
     }).catch(() => {
-      this.alertService.addAlert({type: 'danger', message: 'Erro ao validar token de autenticação.'});
+      this.alertService.addAlert({ type: 'danger', message: 'Erro ao validar token de autenticação.' });
     });
   }
 }

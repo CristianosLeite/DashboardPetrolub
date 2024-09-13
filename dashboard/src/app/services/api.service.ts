@@ -1,6 +1,6 @@
 import { Injectable, isDevMode, EventEmitter, Output } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, firstValueFrom } from 'rxjs';
 import { LoadingService } from './loading.service';
 import { Processo } from '../interfaces/processo.interface';
 import { Evento } from '../interfaces/evento.interface';
@@ -8,12 +8,14 @@ import { Nivel } from '../interfaces/nivel.interface';
 import { User } from '../interfaces/user.interface';
 import { Ticket } from '../interfaces/ticket.interface';
 import { AlertService } from './alert.service';
+import { HandleRoutesService } from './handle-routes.service';
+import { Router } from '@angular/router';
+import { AuthService } from './auth.service';
 
 export interface ApiResponse {
   message: string;
-  data: {
-    name: string;
-  };
+  status: number;
+  data: User
   token?: string | undefined;
 }
 
@@ -35,9 +37,14 @@ export class ApiService {
 
   processo = {} as Processo;
 
-  @Output() UserAuthenticated = new EventEmitter<User>();
-
-  constructor(private http: HttpClient, private loadingService: LoadingService, private alertService: AlertService) { }
+  constructor(
+    private http: HttpClient,
+    private loadingService: LoadingService,
+    private alertService: AlertService,
+    private routes: HandleRoutesService,
+    private router: Router,
+    private auth: AuthService
+  ) { }
 
   /**
  * @description Retorna o cabeçalho da requisição.
@@ -64,13 +71,33 @@ export class ApiService {
   * @param username Nome do usuário.
   * @param usercode Código do usuário.
  */
-  private getToken(username: string, usercode: string): void {
+  public async getToken(username: string, usercode: string): Promise<ApiResponse> {
     this.loadingService.setLoading(true);
     try {
-      window.location.assign(`${this.baseUrl}/login?username=${username}&usercode=${usercode}&app=painel/petrolub/ba`);
-    }
-    catch (error) {
+      const response: ApiResponse = await lastValueFrom(
+        this.http.post<ApiResponse>(
+          this.routes.loginRoute,
+          { username, usercode },
+          { headers: { 'Content-Type': 'application/json' }, withCredentials: true }
+        )
+      );
+
+      if (response.status !== 200) {
+        this.alertService.addAlert({
+          type: 'danger',
+          message: response.message || 'Não foi possível realizar o login!',
+        });
+        this.loadingService.setLoading(false);
+        throw new Error('Não foi possível realizar o login!');
+      }
+
+      await this.validateToken();
       this.loadingService.setLoading(false);
+      this.alertService.addAlert({ type: 'success', message: 'Login realizado com sucesso!' });
+      return response;
+    } catch (error) {
+      this.loadingService.setLoading(false);
+      this.alertService.addAlert({ type: 'danger', message: 'Não foi possível realizar o login!' });
       throw error;
     }
   }
@@ -81,41 +108,58 @@ export class ApiService {
    * @throws Retorna um erro caso não seja possível buscar as informações do usuário.
   */
   async validateToken(): Promise<ApiResponse> {
-    this.loadingService.setLoading(true);
+    //this.loadingService.setLoading(true);
     try {
-      const response: any = await lastValueFrom(
-        this.http.post(`${this.baseUrl}/login/validate-token`, null, { withCredentials: true })
-      );
+      let response =
+        await lastValueFrom(
+          this.http.post(
+            this.routes.validateTokenRoute,
+            null,
+            { headers: { 'Content-Type': 'application/json' }, withCredentials: true }
+          )
+        ).then((data) => {
+          return data as ApiResponse;
+        });
 
-      this.UserAuthenticated.emit(response);
+      if (response.token)
+        this.auth.setIsAuthenticated(true, response.data.username);
+
       return response;
-    } catch (error) {
+    } catch (error: any) {
       this.loadingService.setLoading(false);
-      this.alertService.addAlert({ type: 'danger', message: 'Não foi possível validar o token!' });
+      if (error.status === 401) {
+        this.router.navigate(['/']);
+      }
       throw error;
     }
   }
 
-   /**
-   * Realiza o login do usuário.
-   * @param username
-   * @param usercode
-   */
-   async login(username: string, usercode: string): Promise<void> {
-    this.getToken(username, usercode);
+  /**
+  * Realiza o login do usuário.
+  * @param username
+  * @param usercode
+  */
+  async login(username: string, usercode: string): Promise<void> {
+    this.getToken(username, usercode).then(() => {
+      this.router.navigate(['dashboard/home']);
+    }).catch(() => {
+      this.alertService.addAlert({ type: 'danger', message: 'Erro ao realizar login!' });
+    });
   }
 
   /**
    * Realiza o logout do usuário.
    */
-  logout(): void {
+  async logout(): Promise<void> {
     this.loadingService.setLoading(true);
     try {
-      window.location.assign(`${this.baseUrl}/logout`);
-      sessionStorage.clear();
-      this.UserAuthenticated.emit({} as User);
-    }
-    catch (error) {
+      await firstValueFrom(this.http.post(this.routes.logoutRoute, null, { withCredentials: true })).then(() => {
+        sessionStorage.clear();
+        this.auth.setIsAuthenticated(false, '');
+        this.router.navigate(['/']);
+        console.log('Logout realizado com sucesso!');
+      });
+    } catch (error) {
       this.loadingService.setLoading(false);
       throw error;
     }
